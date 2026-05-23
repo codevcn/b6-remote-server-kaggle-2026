@@ -156,6 +156,14 @@ class KaggleService:
                     f"Pull [{notebook_ref}] stderr (non-fatal): {real_stderr_pull}"
                 )
             logger.info(f"Pull [{notebook_ref}] stdout: {pull_result.stdout.strip()}")
+            # Sau dòng logger.info(f"Pull [{notebook_ref}] stdout: ...")
+            metadata_path = folder_path / "kernel-metadata.json"
+            if metadata_path.exists():
+                logger.info(f"Metadata [{notebook_ref}]: {metadata_path.read_text()}")
+            else:
+                logger.warning(
+                    f"Không tìm thấy kernel-metadata.json trong {folder_path}"
+                )
 
             push_cmd = ["kaggle", "kernels", "push", "-p", str(folder_path)]
             push_result = subprocess.run(
