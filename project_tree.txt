@@ -1,8 +1,14 @@
 Tree view of: D:\D-Jobs\ae-B6\TikTok-Beta\servers\kaggle-master-controller
 
 ├── .env
+├── .gitignore
+├── kaggle-remote-master-server-log.log
+├── keep-render-awake.cmd
+├── note.md
 ├── print_project_tree.py
 ├── project_tree.txt
 ├── requirements.txt
+├── scripts
+│   └── keep_render_awake.py
 └── src
     └── main.py

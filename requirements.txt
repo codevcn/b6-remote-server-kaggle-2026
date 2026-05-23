@@ -15,7 +15,7 @@ httpx==0.27.0
 # ĐIỀU PHỐI KAGLGE (KAGGLE ORCHESTRATION)
 # ==========================================
 # Thư viện chính thức từ Kaggle để máy chủ có thể dùng lệnh điều phối các notebook
-kaggle==1.6.14
+kaggle>=1.8.0
 
 # ==========================================
 # QUẢN LÝ BIẾN MÔI TRƯỜNG (ENVIRONMENT VARIABLES MANAGEMENT)
