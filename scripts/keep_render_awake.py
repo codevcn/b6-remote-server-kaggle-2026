@@ -8,8 +8,8 @@ from datetime import datetime
 # Đường dẫn trực tiếp đến API giám sát của máy chủ
 HEALTHCHECK_URL = "https://b6-remote-server-kaggle-2026.onrender.com/healthcheck"
 
-# Tần suất gửi yêu cầu (Tính bằng giây: 5 phút * 60 giây)
-INTERVAL_SECONDS = 5 * 60
+# Tần suất gửi yêu cầu (Tính bằng giây: 6 phút * 60 giây)
+INTERVAL_SECONDS = 6 * 60
 
 
 def ping_server():

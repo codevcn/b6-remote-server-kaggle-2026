@@ -74,6 +74,9 @@ class NotebookPayload(BaseModel):
     next_notebook_ref: Optional[str] = Field(
         None, description="Tên đăng nhập và tên notebook tiếp theo cần chạy"
     )
+    text_data: Optional[str] = Field(
+        None, description="Dữ liệu văn bản đính kèm tùy chọn từ notebook"
+    )
 
 
 # ==========================================
@@ -292,6 +295,9 @@ async def receive_notebook_webhook(
         logger.info(
             f"Ghi nhận hoàn tất toàn bộ chuỗi công việc của Job [{payload.job_id}]."
         )
+        logger.info(
+            f"Hệ thống sẽ thực hiện quá trình gửi thông báo tổng kết đến Telegram cho Job [{payload.job_id}]."
+        )
         jobs_state[payload.job_id]["status"] = "finished"
 
         message = (
@@ -299,6 +305,8 @@ async def receive_notebook_webhook(
             f"Chuỗi Notebook mang mã định danh: <code>{payload.job_id}</code> đã được thực thi <b>HOÀN TẤT</b>.\n"
             f"Tiến độ tổng thể: <b>{payload.progress.upper()}</b>"
         )
+        if payload.text_data:
+            message += f"\nDữ liệu đính kèm từ notebook: {payload.text_data}"
         background_tasks.add_task(TelegramService.send_message, message)
 
     return {
