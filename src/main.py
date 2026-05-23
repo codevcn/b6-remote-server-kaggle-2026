@@ -133,7 +133,6 @@ class KaggleService:
                 notebook_ref,
                 "-p",
                 str(folder_path),
-                "-m",
             ]
             pull_result = subprocess.run(
                 pull_cmd, env=isolated_env, capture_output=True, text=True
