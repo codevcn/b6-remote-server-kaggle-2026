@@ -1,26 +1,3 @@
-2026-05-23T07:20:02.585433051Z ==> Running 'uvicorn src.main:app --host 0.0.0.0 --port $PORT'
-2026-05-23T07:20:14.393849892Z 2026-05-23 07:20:14,393 - [INFO] - RemoteCoordinator - Đã nạp thành công cấu hình cho 3 tài khoản Kaggle.
-2026-05-23T07:20:14.475189425Z INFO:     Started server process [39]
-2026-05-23T07:20:14.475217007Z INFO:     Waiting for application startup.
-2026-05-23T07:20:14.475449976Z INFO:     Application startup complete.
-2026-05-23T07:20:14.482370173Z INFO:     Uvicorn running on http://0.0.0.0:10000 (Press CTRL+C to quit)
-2026-05-23T07:24:40.38147931Z 2026-05-23 07:24:40,381 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
-2026-05-23T07:24:40.381675726Z [main.py] Cảnh báo: Không tìm thấy tệp .env, hệ thống sẽ sử dụng biến môi trường của Remote Server.
-2026-05-23T07:24:40.381690287Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
-2026-05-23T07:29:41.094498827Z 2026-05-23 07:29:41,094 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
-2026-05-23T07:29:41.094832933Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
-2026-05-23T07:34:41.967311776Z 2026-05-23 07:34:41,967 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
-2026-05-23T07:34:41.967521563Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
-2026-05-23T07:39:42.636239871Z 2026-05-23 07:39:42,636 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
-2026-05-23T07:39:42.636396153Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
-2026-05-23T07:44:43.514436153Z 2026-05-23 07:44:43,514 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
-2026-05-23T07:44:43.514606057Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
-2026-05-23T07:46:40.91479761Z 2026-05-23 07:46:40,914 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: started
-2026-05-23T07:46:40.916090453Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
-2026-05-23T07:46:59.206050806Z 2026-05-23 07:46:59,205 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: completed
-2026-05-23T07:46:59.206126782Z 2026-05-23 07:46:59,206 - [INFO] - RemoteCoordinator - Hệ thống sẽ thực hiện quá trình gọi ngầm notebook tiếp theo: hipbiquang/translate-srt-flow
-2026-05-23T07:46:59.20635006Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
-2026-05-23T07:46:59.206666335Z 2026-05-23 07:46:59,206 - [INFO] - RemoteCoordinator - Đang sử dụng tài khoản [hipbiquang] để kích hoạt notebook: hipbiquang/translate-srt-flow
 2026-05-23T07:47:04.487836829Z 2026-05-23 07:47:04,487 - [ERROR] - RemoteCoordinator - Lỗi hệ thống khi kéo cấu hình hipbiquang/translate-srt-flow: /opt/render/project/src/.venv/lib/python3.12/site-packages/kaggle/api_client.py:244: SyntaxWarning: invalid escape sequence '\['
 2026-05-23T07:47:04.487869792Z   sub_kls = re.match('list\[(.*)\]', klass).group(1)
 2026-05-23T07:47:04.487876502Z /opt/render/project/src/.venv/lib/python3.12/site-packages/kaggle/api_client.py:249: SyntaxWarning: invalid escape sequence '\('
@@ -31,3 +8,43 @@
 2026-05-23T07:47:04.487916815Z   """Creates (aka \&quot;drops\&quot;) a new file into the inbox.  # noqa: E501
 2026-05-23T07:47:04.487919626Z 
 2026-05-23T07:47:04.488161535Z 2026-05-23 07:47:04,488 - [INFO] - RemoteCoordinator - Đã dọn dẹp thư mục tạm thời: hipbiquang_translate-srt-flow
+2026-05-23T07:49:44.210609416Z 2026-05-23 07:49:44,208 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:49:44.21065984Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T07:54:44.901308869Z 2026-05-23 07:54:44,901 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:54:44.901475512Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T07:59:45.630197706Z 2026-05-23 07:59:45,630 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:59:45.630390052Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T08:01:20.726040735Z ==> Deploying...
+2026-05-23T08:01:21.030783516Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-23T08:01:38.718442691Z ==> Running 'uvicorn src.main:app --host 0.0.0.0 --port $PORT'
+2026-05-23T08:01:50.926914008Z 2026-05-23 08:01:50,926 - [INFO] - RemoteCoordinator - Đã nạp thành công cấu hình cho 3 tài khoản Kaggle.
+2026-05-23T08:01:50.930609743Z INFO:     Started server process [57]
+2026-05-23T08:01:50.930649154Z INFO:     Waiting for application startup.
+2026-05-23T08:01:50.930886661Z INFO:     Application startup complete.
+2026-05-23T08:01:51.023295122Z INFO:     Uvicorn running on http://0.0.0.0:10000 (Press CTRL+C to quit)
+2026-05-23T08:01:51.816541622Z [main.py] Cảnh báo: Không tìm thấy tệp .env, hệ thống sẽ sử dụng biến môi trường của Remote Server.
+2026-05-23T08:01:51.816573493Z INFO:     127.0.0.1:33868 - "HEAD / HTTP/1.1" 404 Not Found
+2026-05-23T08:02:02.069251857Z ==> Your service is live 🎉
+2026-05-23T08:02:02.160857132Z INFO:     35.197.118.178:0 - "GET / HTTP/1.1" 404 Not Found
+2026-05-23T08:02:02.280438282Z ==> 
+2026-05-23T08:02:02.285896917Z ==> ///////////////////////////////////////////////////////////
+2026-05-23T08:02:02.290533385Z ==> 
+2026-05-23T08:02:02.294227733Z ==> Available at your primary URL https://b6-remote-server-kaggle-2026.onrender.com
+2026-05-23T08:02:02.302223791Z ==> 
+2026-05-23T08:02:02.306691246Z ==> ///////////////////////////////////////////////////////////
+2026-05-23T08:03:01.127331397Z INFO:     Shutting down
+2026-05-23T08:03:01.227822298Z INFO:     Waiting for application shutdown.
+2026-05-23T08:03:01.227913806Z INFO:     Application shutdown complete.
+2026-05-23T08:03:01.228016274Z INFO:     Finished server process [39]
+2026-05-23T08:04:46.308186113Z 2026-05-23 08:04:46,307 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T08:04:46.308392338Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T08:05:13.019297544Z 2026-05-23 08:05:13,018 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: started
+2026-05-23T08:05:13.020597631Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
+2026-05-23T08:06:03.352245545Z 2026-05-23 08:06:03,352 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: completed
+2026-05-23T08:06:03.352753889Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
+2026-05-23T08:06:03.3527733Z 2026-05-23 08:06:03,352 - [INFO] - RemoteCoordinator - Hệ thống sẽ thực hiện quá trình gọi ngầm notebook tiếp theo: hipbiquang/translate-srt-flow
+2026-05-23T08:06:03.352861132Z 2026-05-23 08:06:03,352 - [INFO] - RemoteCoordinator - Đang sử dụng tài khoản [hipbiquang] để kích hoạt notebook: hipbiquang/translate-srt-flow
+2026-05-23T08:06:08.418833238Z 2026-05-23 08:06:08,418 - [ERROR] - RemoteCoordinator - Lỗi hệ thống khi kéo cấu hình hipbiquang/translate-srt-flow:
+2026-05-23T08:06:08.418849529Z   stderr: /opt/render/project/src/.venv/bin/python: No module named kaggle.__main__; 'kaggle' is a package and cannot be directly executed
+2026-05-23T08:06:08.418854249Z   stdout: 
+2026-05-23T08:06:08.418858469Z 2026-05-23 08:06:08,418 - [INFO] - RemoteCoordinator - Đã dọn dẹp thư mục tạm thời: hipbiquang_translate-srt-flow

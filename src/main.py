@@ -119,18 +119,14 @@ class KaggleService:
             isolated_env = os.environ.copy()
             isolated_env["KAGGLE_USERNAME"] = username
             isolated_env["KAGGLE_KEY"] = KAGGLE_ACCOUNTS[username]
+            # Tắt SyntaxWarning từ thư viện kaggle (Python 3.12) qua biến môi trường
+            isolated_env["PYTHONWARNINGS"] = "ignore"
 
             folder_name = notebook_ref.replace("/", "_")
             folder_path = BASE_DIR / "tmp" / folder_name
             os.makedirs(folder_path, exist_ok=True)
 
-            # Dùng "python -W ignore -m kaggle" thay vì "kaggle" trực tiếp
-            # để tắt SyntaxWarning từ thư viện kaggle khi chạy trên Python 3.12
             pull_cmd = [
-                "python",
-                "-W",
-                "ignore",
-                "-m",
                 "kaggle",
                 "kernels",
                 "pull",
@@ -161,17 +157,7 @@ class KaggleService:
                 )
             logger.info(f"Pull [{notebook_ref}] stdout: {pull_result.stdout.strip()}")
 
-            push_cmd = [
-                "python",
-                "-W",
-                "ignore",
-                "-m",
-                "kaggle",
-                "kernels",
-                "push",
-                "-p",
-                str(folder_path),
-            ]
+            push_cmd = ["kaggle", "kernels", "push", "-p", str(folder_path)]
             push_result = subprocess.run(
                 push_cmd, env=isolated_env, capture_output=True, text=True
             )
