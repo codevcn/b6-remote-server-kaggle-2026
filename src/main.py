@@ -124,7 +124,13 @@ class KaggleService:
             folder_path = BASE_DIR / "tmp" / folder_name
             os.makedirs(folder_path, exist_ok=True)
 
+            # Dùng "python -W ignore -m kaggle" thay vì "kaggle" trực tiếp
+            # để tắt SyntaxWarning từ thư viện kaggle khi chạy trên Python 3.12
             pull_cmd = [
+                "python",
+                "-W",
+                "ignore",
+                "-m",
                 "kaggle",
                 "kernels",
                 "pull",
@@ -136,21 +142,56 @@ class KaggleService:
             pull_result = subprocess.run(
                 pull_cmd, env=isolated_env, capture_output=True, text=True
             )
+            # Lọc bỏ các dòng SyntaxWarning khỏi stderr trước khi kiểm tra lỗi thật
+            real_stderr_pull = "\n".join(
+                line
+                for line in pull_result.stderr.splitlines()
+                if "SyntaxWarning" not in line and "invalid escape sequence" not in line
+            ).strip()
             if pull_result.returncode != 0:
                 logger.error(
-                    f"Lỗi hệ thống khi kéo cấu hình {notebook_ref}: {pull_result.stderr}"
+                    f"Lỗi hệ thống khi kéo cấu hình {notebook_ref}:\n"
+                    f"  stderr: {real_stderr_pull}\n"
+                    f"  stdout: {pull_result.stdout.strip()}"
                 )
                 return
+            if real_stderr_pull:
+                logger.warning(
+                    f"Pull [{notebook_ref}] stderr (non-fatal): {real_stderr_pull}"
+                )
+            logger.info(f"Pull [{notebook_ref}] stdout: {pull_result.stdout.strip()}")
 
-            push_cmd = ["kaggle", "kernels", "push", "-p", str(folder_path)]
+            push_cmd = [
+                "python",
+                "-W",
+                "ignore",
+                "-m",
+                "kaggle",
+                "kernels",
+                "push",
+                "-p",
+                str(folder_path),
+            ]
             push_result = subprocess.run(
                 push_cmd, env=isolated_env, capture_output=True, text=True
             )
+            real_stderr_push = "\n".join(
+                line
+                for line in push_result.stderr.splitlines()
+                if "SyntaxWarning" not in line and "invalid escape sequence" not in line
+            ).strip()
             if push_result.returncode != 0:
                 logger.error(
-                    f"Lỗi hệ thống khi gửi lệnh chạy {notebook_ref}: {push_result.stderr}"
+                    f"Lỗi hệ thống khi gửi lệnh chạy {notebook_ref}:\n"
+                    f"  stderr: {real_stderr_push}\n"
+                    f"  stdout: {push_result.stdout.strip()}"
                 )
                 return
+            if real_stderr_push:
+                logger.warning(
+                    f"Push [{notebook_ref}] stderr (non-fatal): {real_stderr_push}"
+                )
+            logger.info(f"Push [{notebook_ref}] stdout: {push_result.stdout.strip()}")
 
             logger.info(
                 f"Đã kích hoạt thành công tiến trình thực thi cho notebook: {notebook_ref}"

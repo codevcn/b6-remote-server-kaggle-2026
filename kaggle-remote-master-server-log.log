@@ -1,0 +1,33 @@
+2026-05-23T07:20:02.585433051Z ==> Running 'uvicorn src.main:app --host 0.0.0.0 --port $PORT'
+2026-05-23T07:20:14.393849892Z 2026-05-23 07:20:14,393 - [INFO] - RemoteCoordinator - Đã nạp thành công cấu hình cho 3 tài khoản Kaggle.
+2026-05-23T07:20:14.475189425Z INFO:     Started server process [39]
+2026-05-23T07:20:14.475217007Z INFO:     Waiting for application startup.
+2026-05-23T07:20:14.475449976Z INFO:     Application startup complete.
+2026-05-23T07:20:14.482370173Z INFO:     Uvicorn running on http://0.0.0.0:10000 (Press CTRL+C to quit)
+2026-05-23T07:24:40.38147931Z 2026-05-23 07:24:40,381 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:24:40.381675726Z [main.py] Cảnh báo: Không tìm thấy tệp .env, hệ thống sẽ sử dụng biến môi trường của Remote Server.
+2026-05-23T07:24:40.381690287Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T07:29:41.094498827Z 2026-05-23 07:29:41,094 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:29:41.094832933Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T07:34:41.967311776Z 2026-05-23 07:34:41,967 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:34:41.967521563Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T07:39:42.636239871Z 2026-05-23 07:39:42,636 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:39:42.636396153Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T07:44:43.514436153Z 2026-05-23 07:44:43,514 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T07:44:43.514606057Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T07:46:40.91479761Z 2026-05-23 07:46:40,914 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: started
+2026-05-23T07:46:40.916090453Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
+2026-05-23T07:46:59.206050806Z 2026-05-23 07:46:59,205 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: completed
+2026-05-23T07:46:59.206126782Z 2026-05-23 07:46:59,206 - [INFO] - RemoteCoordinator - Hệ thống sẽ thực hiện quá trình gọi ngầm notebook tiếp theo: hipbiquang/translate-srt-flow
+2026-05-23T07:46:59.20635006Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
+2026-05-23T07:46:59.206666335Z 2026-05-23 07:46:59,206 - [INFO] - RemoteCoordinator - Đang sử dụng tài khoản [hipbiquang] để kích hoạt notebook: hipbiquang/translate-srt-flow
+2026-05-23T07:47:04.487836829Z 2026-05-23 07:47:04,487 - [ERROR] - RemoteCoordinator - Lỗi hệ thống khi kéo cấu hình hipbiquang/translate-srt-flow: /opt/render/project/src/.venv/lib/python3.12/site-packages/kaggle/api_client.py:244: SyntaxWarning: invalid escape sequence '\['
+2026-05-23T07:47:04.487869792Z   sub_kls = re.match('list\[(.*)\]', klass).group(1)
+2026-05-23T07:47:04.487876502Z /opt/render/project/src/.venv/lib/python3.12/site-packages/kaggle/api_client.py:249: SyntaxWarning: invalid escape sequence '\('
+2026-05-23T07:47:04.487881263Z   sub_kls = re.match('dict\(([^,]*), (.*)\)', klass).group(2)
+2026-05-23T07:47:04.487887263Z /opt/render/project/src/.venv/lib/python3.12/site-packages/kaggle/api/kaggle_api.py:1055: SyntaxWarning: invalid escape sequence '\&'
+2026-05-23T07:47:04.487893024Z   """Creates (aka \&quot;drops\&quot;) a new file into the inbox.  # noqa: E501
+2026-05-23T07:47:04.487897164Z /opt/render/project/src/.venv/lib/python3.12/site-packages/kaggle/api/kaggle_api.py:1076: SyntaxWarning: invalid escape sequence '\&'
+2026-05-23T07:47:04.487916815Z   """Creates (aka \&quot;drops\&quot;) a new file into the inbox.  # noqa: E501
+2026-05-23T07:47:04.487919626Z 
+2026-05-23T07:47:04.488161535Z 2026-05-23 07:47:04,488 - [INFO] - RemoteCoordinator - Đã dọn dẹp thư mục tạm thời: hipbiquang_translate-srt-flow
