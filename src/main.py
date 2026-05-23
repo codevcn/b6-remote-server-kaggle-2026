@@ -191,6 +191,14 @@ class KaggleService:
                 f"Pull notebook [{notebook_ref}] stdout: {pull_nb_result.stdout.strip()}"
             )
 
+            metadata_path = folder_path / "kernel-metadata.json"
+            if metadata_path.exists():
+                meta = json.loads(metadata_path.read_text(encoding="utf-8"))
+                if meta.get("machine_shape") == "None":
+                    meta["machine_shape"] = None
+                metadata_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
+                logger.info(f"Đã chuẩn hóa kernel-metadata.json cho {notebook_ref}")
+
             # --- Bước 3: Push để kích hoạt notebook chạy lại ---
             push_cmd = ["kaggle", "kernels", "push", "-p", str(folder_path)]
             push_result = subprocess.run(
