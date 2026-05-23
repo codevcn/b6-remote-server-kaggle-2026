@@ -126,7 +126,41 @@ class KaggleService:
             folder_path = BASE_DIR / "tmp" / folder_name
             os.makedirs(folder_path, exist_ok=True)
 
-            pull_cmd = [
+            # --- Bước 1: Pull metadata (-m) để lấy kernel-metadata.json ---
+            pull_meta_cmd = [
+                "kaggle",
+                "kernels",
+                "pull",
+                notebook_ref,
+                "-p",
+                str(folder_path),
+                "-m",
+            ]
+            pull_meta_result = subprocess.run(
+                pull_meta_cmd, env=isolated_env, capture_output=True, text=True
+            )
+            real_stderr_meta = "\n".join(
+                line
+                for line in pull_meta_result.stderr.splitlines()
+                if "SyntaxWarning" not in line and "invalid escape sequence" not in line
+            ).strip()
+            if pull_meta_result.returncode != 0:
+                logger.error(
+                    f"Lỗi khi pull metadata {notebook_ref}:\n"
+                    f"  stderr: {real_stderr_meta}\n"
+                    f"  stdout: {pull_meta_result.stdout.strip()}"
+                )
+                return
+            if real_stderr_meta:
+                logger.warning(
+                    f"Pull metadata [{notebook_ref}] stderr (non-fatal): {real_stderr_meta}"
+                )
+            logger.info(
+                f"Pull metadata [{notebook_ref}] stdout: {pull_meta_result.stdout.strip()}"
+            )
+
+            # --- Bước 2: Pull notebook (không -m) để lấy file .ipynb ---
+            pull_nb_cmd = [
                 "kaggle",
                 "kernels",
                 "pull",
@@ -134,36 +168,30 @@ class KaggleService:
                 "-p",
                 str(folder_path),
             ]
-            pull_result = subprocess.run(
-                pull_cmd, env=isolated_env, capture_output=True, text=True
+            pull_nb_result = subprocess.run(
+                pull_nb_cmd, env=isolated_env, capture_output=True, text=True
             )
-            # Lọc bỏ các dòng SyntaxWarning khỏi stderr trước khi kiểm tra lỗi thật
-            real_stderr_pull = "\n".join(
+            real_stderr_nb = "\n".join(
                 line
-                for line in pull_result.stderr.splitlines()
+                for line in pull_nb_result.stderr.splitlines()
                 if "SyntaxWarning" not in line and "invalid escape sequence" not in line
             ).strip()
-            if pull_result.returncode != 0:
+            if pull_nb_result.returncode != 0:
                 logger.error(
-                    f"Lỗi hệ thống khi kéo cấu hình {notebook_ref}:\n"
-                    f"  stderr: {real_stderr_pull}\n"
-                    f"  stdout: {pull_result.stdout.strip()}"
+                    f"Lỗi khi pull notebook {notebook_ref}:\n"
+                    f"  stderr: {real_stderr_nb}\n"
+                    f"  stdout: {pull_nb_result.stdout.strip()}"
                 )
                 return
-            if real_stderr_pull:
+            if real_stderr_nb:
                 logger.warning(
-                    f"Pull [{notebook_ref}] stderr (non-fatal): {real_stderr_pull}"
+                    f"Pull notebook [{notebook_ref}] stderr (non-fatal): {real_stderr_nb}"
                 )
-            logger.info(f"Pull [{notebook_ref}] stdout: {pull_result.stdout.strip()}")
-            # Sau dòng logger.info(f"Pull [{notebook_ref}] stdout: ...")
-            metadata_path = folder_path / "kernel-metadata.json"
-            if metadata_path.exists():
-                logger.info(f"Metadata [{notebook_ref}]: {metadata_path.read_text()}")
-            else:
-                logger.warning(
-                    f"Không tìm thấy kernel-metadata.json trong {folder_path}"
-                )
+            logger.info(
+                f"Pull notebook [{notebook_ref}] stdout: {pull_nb_result.stdout.strip()}"
+            )
 
+            # --- Bước 3: Push để kích hoạt notebook chạy lại ---
             push_cmd = ["kaggle", "kernels", "push", "-p", str(folder_path)]
             push_result = subprocess.run(
                 push_cmd, env=isolated_env, capture_output=True, text=True

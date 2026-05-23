@@ -1,13 +1,4 @@
-2026-05-23T08:52:18.177799802Z ==> Running 'uvicorn src.main:app --host 0.0.0.0 --port $PORT'
-2026-05-23T08:52:38.406686558Z 2026-05-23 08:52:38,404 - [INFO] - RemoteCoordinator - Đã nạp thành công cấu hình cho 3 tài khoản Kaggle.
-2026-05-23T08:52:38.409799308Z INFO:     Started server process [57]
-2026-05-23T08:52:38.409831279Z INFO:     Waiting for application startup.
-2026-05-23T08:52:38.410072924Z INFO:     Application startup complete.
-2026-05-23T08:52:38.475853574Z INFO:     Uvicorn running on http://0.0.0.0:10000 (Press CTRL+C to quit)
-2026-05-23T08:52:38.604248483Z [main.py] Cảnh báo: Không tìm thấy tệp .env, hệ thống sẽ sử dụng biến môi trường của Remote Server.
-2026-05-23T08:52:38.604267374Z INFO:     127.0.0.1:60028 - "HEAD / HTTP/1.1" 404 Not Found
 2026-05-23T08:52:42.742019949Z ==> Your service is live 🎉
-2026-05-23T08:52:42.85495414Z INFO:     34.168.108.203:0 - "GET / HTTP/1.1" 404 Not Found
 2026-05-23T08:52:42.992602369Z ==> 
 2026-05-23T08:52:42.994943945Z ==> ///////////////////////////////////////////////////////////
 2026-05-23T08:52:42.998401169Z ==> 
@@ -18,24 +9,6 @@
 2026-05-23T08:53:41.929872839Z INFO:     Waiting for application shutdown.
 2026-05-23T08:53:41.930005922Z INFO:     Application shutdown complete.
 2026-05-23T08:53:41.930076174Z INFO:     Finished server process [58]
-2026-05-23T08:54:53.049584814Z 2026-05-23 08:54:53,049 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: started
-2026-05-23T08:54:53.049852219Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
-2026-05-23T08:54:53.641217426Z 2026-05-23 08:54:53,641 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
-2026-05-23T08:54:53.64139898Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
-2026-05-23T08:55:22.796819917Z 2026-05-23 08:55:22,796 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: completed
-2026-05-23T08:55:22.796915759Z 2026-05-23 08:55:22,796 - [INFO] - RemoteCoordinator - Hệ thống sẽ thực hiện quá trình gọi ngầm notebook tiếp theo: hipbiquang/translate-srt-flow
-2026-05-23T08:55:22.797427311Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
-2026-05-23T08:55:22.79783014Z 2026-05-23 08:55:22,797 - [INFO] - RemoteCoordinator - Đang sử dụng tài khoản [hipbiquang] để kích hoạt notebook: hipbiquang/translate-srt-flow
-2026-05-23T08:55:29.489194713Z 2026-05-23 08:55:29,487 - [INFO] - RemoteCoordinator - Pull [hipbiquang/translate-srt-flow] stdout: Source code and metadata downloaded to /opt/render/project/src/tmp/hipbiquang_translate-srt-flow
-2026-05-23T08:55:29.489220253Z 2026-05-23 08:55:29,488 - [INFO] - RemoteCoordinator - Metadata [hipbiquang/translate-srt-flow]: {
-2026-05-23T08:55:29.489225804Z   "id": "hipbiquang/translate-srt-flow",
-2026-05-23T08:55:29.489230413Z   "id_no": 119966520,
-2026-05-23T08:55:29.489234514Z   "title": "** Translate SRT Flow",
-2026-05-23T08:55:29.489238694Z   "code_file": "translate-srt-flow.ipynb",
-2026-05-23T08:55:29.489242734Z   "language": "python",
-2026-05-23T08:55:29.489247364Z   "kernel_type": "notebook",
-2026-05-23T08:55:29.489251234Z   "is_private": true,
-2026-05-23T08:55:29.489255084Z   "enable_gpu": false,
 2026-05-23T08:55:29.489258954Z   "enable_tpu": false,
 2026-05-23T08:55:29.489262904Z   "enable_internet": true,
 2026-05-23T08:55:29.489266814Z   "keywords": [],
@@ -51,3 +24,41 @@
 2026-05-23T08:55:33.08851124Z 2026-05-23 08:55:33,088 - [INFO] - RemoteCoordinator - Push [hipbiquang/translate-srt-flow] stdout: Kernel push error: Notebook not found
 2026-05-23T08:55:33.088541131Z 2026-05-23 08:55:33,088 - [INFO] - RemoteCoordinator - Đã kích hoạt thành công tiến trình thực thi cho notebook: hipbiquang/translate-srt-flow
 2026-05-23T08:55:33.089137154Z 2026-05-23 08:55:33,088 - [INFO] - RemoteCoordinator - Đã dọn dẹp thư mục tạm thời: hipbiquang_translate-srt-flow
+2026-05-23T08:57:44.199277386Z ==> Detected service running on port 10000
+2026-05-23T08:57:44.601541762Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-05-23T08:59:54.525141674Z 2026-05-23 08:59:54,524 - [INFO] - RemoteCoordinator - Healthcheck pinged. Hệ thống hoạt động bình thường.
+2026-05-23T08:59:54.525618675Z INFO:     171.250.164.7:0 - "GET /healthcheck HTTP/1.1" 200 OK
+2026-05-23T09:01:16.094501107Z ==> Deploying...
+2026-05-23T09:01:16.378507178Z ==> Setting WEB_CONCURRENCY=1 by default, based on available CPUs in the instance
+2026-05-23T09:02:02.221002454Z ==> Running 'uvicorn src.main:app --host 0.0.0.0 --port $PORT'
+2026-05-23T09:02:15.423882471Z 2026-05-23 09:02:15,423 - [INFO] - RemoteCoordinator - Đã nạp thành công cấu hình cho 3 tài khoản Kaggle.
+2026-05-23T09:02:15.427824495Z INFO:     Started server process [56]
+2026-05-23T09:02:15.427859975Z INFO:     Waiting for application startup.
+2026-05-23T09:02:15.428056241Z INFO:     Application startup complete.
+2026-05-23T09:02:15.52076688Z INFO:     Uvicorn running on http://0.0.0.0:10000 (Press CTRL+C to quit)
+2026-05-23T09:02:15.713531791Z [main.py] Cảnh báo: Không tìm thấy tệp .env, hệ thống sẽ sử dụng biến môi trường của Remote Server.
+2026-05-23T09:02:15.713553871Z INFO:     127.0.0.1:34802 - "HEAD / HTTP/1.1" 404 Not Found
+2026-05-23T09:02:17.035759851Z ==> Your service is live 🎉
+2026-05-23T09:02:17.288976264Z ==> 
+2026-05-23T09:02:17.292619341Z ==> ///////////////////////////////////////////////////////////
+2026-05-23T09:02:17.295280027Z ==> 
+2026-05-23T09:02:17.297757909Z ==> Available at your primary URL https://b6-remote-server-kaggle-2026.onrender.com
+2026-05-23T09:02:17.300193811Z ==> 
+2026-05-23T09:02:17.302692054Z ==> ///////////////////////////////////////////////////////////
+2026-05-23T09:02:17.431619898Z INFO:     34.82.80.145:0 - "GET / HTTP/1.1" 404 Not Found
+2026-05-23T09:02:31.662015265Z 2026-05-23 09:02:31,661 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: started
+2026-05-23T09:02:31.66222814Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
+2026-05-23T09:03:07.592461799Z 2026-05-23 09:03:07,592 - [INFO] - RemoteCoordinator - Tiếp nhận dữ liệu từ Job [broccoli-01] | Phân loại: start | Trạng thái: completed
+2026-05-23T09:03:07.592547541Z 2026-05-23 09:03:07,592 - [INFO] - RemoteCoordinator - Hệ thống sẽ thực hiện quá trình gọi ngầm notebook tiếp theo: hipbiquang/translate-srt-flow
+2026-05-23T09:03:07.592880959Z INFO:     34.7.54.199:0 - "POST /webhook/notebook HTTP/1.1" 200 OK
+2026-05-23T09:03:07.593211458Z 2026-05-23 09:03:07,593 - [INFO] - RemoteCoordinator - Đang sử dụng tài khoản [hipbiquang] để kích hoạt notebook: hipbiquang/translate-srt-flow
+2026-05-23T09:03:16.926717542Z 2026-05-23 09:03:16,923 - [INFO] - RemoteCoordinator - Pull [hipbiquang/translate-srt-flow] stdout: Source code downloaded to /opt/render/project/src/tmp/hipbiquang_translate-srt-flow/translate-srt-flow.ipynb
+2026-05-23T09:03:16.926747713Z 2026-05-23 09:03:16,923 - [WARNING] - RemoteCoordinator - Không tìm thấy kernel-metadata.json trong /opt/render/project/src/tmp/hipbiquang_translate-srt-flow
+2026-05-23T09:03:19.819706487Z 2026-05-23 09:03:19,818 - [ERROR] - RemoteCoordinator - Lỗi hệ thống khi gửi lệnh chạy hipbiquang/translate-srt-flow:
+2026-05-23T09:03:19.819730307Z   stderr: 
+2026-05-23T09:03:19.819737507Z   stdout: Metadata file not found: /opt/render/project/src/tmp/hipbiquang_translate-srt-flow/kernel-metadata.json
+2026-05-23T09:03:19.819741978Z 2026-05-23 09:03:19,819 - [INFO] - RemoteCoordinator - Đã dọn dẹp thư mục tạm thời: hipbiquang_translate-srt-flow
+2026-05-23T09:03:20.294403712Z INFO:     Shutting down
+2026-05-23T09:03:20.39489434Z INFO:     Waiting for application shutdown.
+2026-05-23T09:03:20.395001662Z INFO:     Application shutdown complete.
+2026-05-23T09:03:20.395078794Z INFO:     Finished server process [57]
