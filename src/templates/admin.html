@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin — Kaggle Master Controller</title>
+    <meta name="description" content="Bảng điều khiển quản trị Kaggle Master Controller — B6 Team" />
+    <link rel="stylesheet" href="/static/admin.css" />
+</head>
+<body>
+<div class="layout">
+
+    <!-- ══════════ HEADER ══════════ -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="header-brand">
+                <span class="header-icon">⚡</span>
+                <div>
+                    <h1 class="header-title">Kaggle Master Controller</h1>
+                    <p class="header-subtitle">B6 Team — Admin Panel</p>
+                </div>
+            </div>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                <span>Server online</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ══════════ MAIN ══════════ -->
+    <main class="main">
+
+        <!-- ── Section: Switcher (Trang chủ) ── -->
+        <section id="section-switcher" class="section active">
+            <div class="switcher-header">
+                <h2 class="section-title">Bảng điều khiển</h2>
+                <p class="section-desc">Chọn tính năng bạn muốn quản lý</p>
+            </div>
+            <div class="switcher-grid">
+
+                <button class="nav-card" id="btn-nav-logs" onclick="showSection('logs')">
+                    <span class="nav-card-icon">📋</span>
+                    <div class="nav-card-body">
+                        <h3 class="nav-card-title">Runtime Logs</h3>
+                        <p class="nav-card-desc">Xem, sao chép và tải xuống log hoạt động của server</p>
+                    </div>
+                    <span class="nav-card-arrow">→</span>
+                </button>
+
+                <button class="nav-card" id="btn-nav-config" onclick="showSection('config')">
+                    <span class="nav-card-icon">⚙️</span>
+                    <div class="nav-card-body">
+                        <h3 class="nav-card-title">Cấu hình Job ID</h3>
+                        <p class="nav-card-desc">Quản lý Job ID được phép gửi request đến server</p>
+                    </div>
+                    <span class="nav-card-arrow">→</span>
+                </button>
+
+            </div>
+        </section>
+
+        <!-- ── Section 1: Logs ── -->
+        <section id="section-logs" class="section">
+
+            <div class="section-header">
+                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
+                <h2 class="section-title">📋 Runtime Logs</h2>
+                <div class="section-actions">
+                    <button class="btn btn-secondary" id="btn-copy" onclick="copyLogs()">📋 Sao chép</button>
+                    <a class="btn btn-secondary" href="/admin/api/logs/download" download="runtime.log">⬇️ Tải xuống</a>
+                    <button class="btn btn-secondary" onclick="loadLogs()">🔄 Làm mới</button>
+                </div>
+            </div>
+
+            <div id="log-loading" class="loading-state" style="display:none">
+                <div class="spinner"></div>
+                <span>Đang tải log...</span>
+            </div>
+
+            <div class="log-container">
+                <div class="log-meta">
+                    <span id="log-line-count">—</span>&nbsp;dòng log gần nhất
+                </div>
+                <pre id="log-content" class="log-viewer">Đang tải nội dung log...</pre>
+            </div>
+
+        </section>
+
+        <!-- ── Section 2: Config ── -->
+        <section id="section-config" class="section">
+
+            <div class="section-header">
+                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
+                <h2 class="section-title">⚙️ Cấu hình Job ID</h2>
+            </div>
+
+            <!-- Card: Hiển thị job_id hiện tại -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <span class="config-label">Job ID đang hoạt động</span>
+                    <button class="btn btn-sm btn-ghost" onclick="loadConfig()" title="Làm mới">🔄</button>
+                </div>
+                <div class="job-id-display" id="current-job-id">
+                    <span class="loading-text">Đang tải...</span>
+                </div>
+                <p class="config-hint" id="config-hint-text">Đang kiểm tra cấu hình...</p>
+            </div>
+
+            <!-- Card: Cập nhật job_id -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <span class="config-label">Cập nhật Job ID</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="input-job-id">Job ID mới</label>
+                    <input
+                        type="text"
+                        id="input-job-id"
+                        class="form-input"
+                        placeholder="Nhập job_id mới (ví dụ: broccoli-02)"
+                        autocomplete="off"
+                        spellcheck="false"
+                    />
+                    <p class="form-hint">
+                        Để trống và nhấn "Xóa giới hạn" nếu muốn server chấp nhận mọi Job ID.
+                    </p>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="btn-submit-job" onclick="submitJobId()">✅ Cập nhật Job ID</button>
+                    <button class="btn btn-danger" id="btn-clear-job" onclick="clearJobId()">🗑️ Xóa giới hạn</button>
+                </div>
+                <div id="config-feedback" class="feedback" style="display:none"></div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<!-- ══════════ JAVASCRIPT ══════════ -->
+<script>
+    /* ──────────────────────────────────────────
+       SECTION SWITCHING
+       ────────────────────────────────────────── */
+    function showSection(name) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById('section-' + name).classList.add('active');
+        if (name === 'logs')   loadLogs();
+        if (name === 'config') loadConfig();
+    }
+
+    /* ──────────────────────────────────────────
+       SECTION 1 — LOGS
+       ────────────────────────────────────────── */
+    async function loadLogs() {
+        const elContent   = document.getElementById('log-content');
+        const elLoading   = document.getElementById('log-loading');
+        const elLineCount = document.getElementById('log-line-count');
+
+        elLoading.style.display = 'flex';
+        elContent.style.opacity = '0.4';
+
+        try {
+            const res  = await fetch('/admin/api/logs');
+            const text = await res.text();
+
+            elContent.textContent = text.trim() || '(Chưa có log nào được ghi.)';
+
+            const lines = text.trim() ? text.trim().split('\n').length : 0;
+            elLineCount.textContent = lines;
+
+            // Cuộn xuống cuối để xem log mới nhất
+            elContent.scrollTop = elContent.scrollHeight;
+        } catch (err) {
+            elContent.textContent = '❌ Lỗi: Không thể tải log.\n' + err.message;
+        } finally {
+            elLoading.style.display = 'none';
+            elContent.style.opacity = '1';
+        }
+    }
+
+    async function copyLogs() {
+        const content = document.getElementById('log-content').textContent;
+        const btn     = document.getElementById('btn-copy');
+        try {
+            await navigator.clipboard.writeText(content);
+            btn.textContent = '✅ Đã sao chép!';
+            btn.classList.add('btn-success');
+        } catch {
+            btn.textContent = '❌ Lỗi!';
+        } finally {
+            setTimeout(() => {
+                btn.textContent = '📋 Sao chép';
+                btn.classList.remove('btn-success');
+            }, 2200);
+        }
+    }
+
+    /* ──────────────────────────────────────────
+       SECTION 2 — CONFIG
+       ────────────────────────────────────────── */
+    async function loadConfig() {
+        const elDisplay = document.getElementById('current-job-id');
+        const elHint    = document.getElementById('config-hint-text');
+
+        elDisplay.innerHTML = '<span class="loading-text">Đang tải...</span>';
+        elDisplay.className = 'job-id-display';
+
+        try {
+            const res  = await fetch('/admin/api/config');
+            const data = await res.json();
+            const jobId = data.active_job_id;
+
+            if (jobId) {
+                elDisplay.innerHTML = `<code class="job-id-code">${escHtml(jobId)}</code>`;
+                elDisplay.classList.add('has-filter');
+                elHint.textContent = 'Server đang lọc — chỉ chấp nhận request có Job ID khớp với giá trị trên.';
+            } else {
+                elDisplay.innerHTML = '<span class="no-filter-text">— Không giới hạn —</span>';
+                elDisplay.classList.add('no-filter');
+                elHint.textContent = 'Server đang chấp nhận mọi Job ID. Hãy cấu hình để lọc request theo Job ID cụ thể.';
+            }
+        } catch (err) {
+            elDisplay.innerHTML = '<span class="no-filter-text">❌ Lỗi khi tải cấu hình</span>';
+            elHint.textContent = err.message;
+        }
+    }
+
+    async function submitJobId() {
+        const jobId = document.getElementById('input-job-id').value.trim();
+        if (!jobId) {
+            showFeedback('warning', '⚠️ Vui lòng nhập Job ID. Để xóa giới hạn, hãy nhấn nút "Xóa giới hạn".');
+            return;
+        }
+        await updateJobId(jobId);
+    }
+
+    async function clearJobId() {
+        if (!confirm('Xác nhận xóa giới hạn Job ID?\nSau khi xóa, server sẽ chấp nhận mọi request bất kể job_id.')) return;
+        await updateJobId(null);
+    }
+
+    async function updateJobId(jobId) {
+        const btnSubmit = document.getElementById('btn-submit-job');
+        const btnClear  = document.getElementById('btn-clear-job');
+        btnSubmit.disabled = btnClear.disabled = true;
+
+        try {
+            const res  = await fetch('/admin/api/config/job-id', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ job_id: jobId }),
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                const msg = jobId
+                    ? `✅ Đã cập nhật. Server giờ chỉ chấp nhận Job ID: <strong>${escHtml(jobId)}</strong>`
+                    : '✅ Đã xóa giới hạn. Server chấp nhận mọi Job ID.';
+                showFeedback('success', msg);
+                document.getElementById('input-job-id').value = '';
+                await loadConfig();
+            } else {
+                showFeedback('error', '❌ Lỗi: ' + (data.detail || 'Không xác định được lỗi.'));
+            }
+        } catch (err) {
+            showFeedback('error', '❌ Lỗi kết nối: ' + err.message);
+        } finally {
+            btnSubmit.disabled = btnClear.disabled = false;
+        }
+    }
+
+    /* ──────────────────────────────────────────
+       UTILITIES
+       ────────────────────────────────────────── */
+    function showFeedback(type, html) {
+        const el = document.getElementById('config-feedback');
+        el.className = 'feedback feedback-' + type;
+        el.innerHTML = html;
+        el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 5000);
+    }
+
+    function escHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    // Enter để submit trong form input
+    document.getElementById('input-job-id')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitJobId();
+    });
+</script>
+</body>
+</html>

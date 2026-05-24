@@ -7,7 +7,9 @@ from pathlib import Path
 from typing import Literal, Optional, Dict
 
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Security, Depends
+from fastapi.responses import HTMLResponse, FileResponse, PlainTextResponse
 from fastapi.security import APIKeyHeader
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 import httpx
 from dotenv import load_dotenv
@@ -31,12 +33,79 @@ else:
     )
 
 # ==========================================
+# 1b. CẤU HÌNH ỨNG DỤNG (APP CONFIG)
+# ==========================================
+CONFIG_PATH = BASE_DIR / "src" / "configs" / "configs.json"
+
+
+def _load_config() -> dict:
+    """Đọc cấu hình từ configs.json. Trả về dict mặc định nếu file không tồn tại hoặc bị lỗi."""
+    if CONFIG_PATH.exists():
+        try:
+            return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {"active_job_id": None}
+
+
+def _save_config(config: dict) -> None:
+    """Ghi cấu hình xuống file configs.json."""
+    CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CONFIG_PATH.write_text(
+        json.dumps(config, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+
+
+server_config: Dict = _load_config()
+
+# ==========================================
 # 2. CẤU HÌNH & GHI NHẬT KÝ (CONFIG & LOGGING)
 # ==========================================
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - [%(levelname)s] - %(name)s - %(message)s"
 )
 logger = logging.getLogger("RemoteCoordinator")
+
+
+class _TrimmedFileHandler(logging.FileHandler):
+    """
+    FileHandler tùy chỉnh: ghi log vào file và tự động cắt bớt khi file vượt
+    quá ngưỡng (max_lines + trim_buffer), chỉ giữ lại max_lines dòng mới nhất.
+    """
+
+    def __init__(
+        self, filename, max_lines: int = 300, trim_buffer: int = 100, **kwargs
+    ):
+        self.max_lines = max_lines
+        self.trim_buffer = trim_buffer
+        super().__init__(filename, mode="a", encoding="utf-8", **kwargs)
+
+    def emit(self, record):
+        super().emit(record)
+        self._trim_if_needed()
+
+    def _trim_if_needed(self):
+        try:
+            with open(self.baseFilename, "r", encoding="utf-8") as f:
+                lines = f.readlines()
+            # Chỉ ghi lại file khi số dòng vượt quá ngưỡng (tránh I/O liên tục)
+            if len(lines) > self.max_lines + self.trim_buffer:
+                with open(self.baseFilename, "w", encoding="utf-8") as f:
+                    f.writelines(lines[-self.max_lines :])
+        except Exception:
+            pass  # Không để lỗi file I/O làm crash server
+
+
+# --- Gắn file handler vào root logger để bắt log của mọi thành phần ---
+_LOG_FILE_PATH = BASE_DIR / "runtime.log"
+_log_formatter = logging.Formatter(
+    "%(asctime)s - [%(levelname)s] - %(name)s - %(message)s"
+)
+_file_handler = _TrimmedFileHandler(str(_LOG_FILE_PATH), max_lines=300, trim_buffer=100)
+_file_handler.setFormatter(_log_formatter)
+logging.getLogger().addHandler(_file_handler)
+
+logger.info(f"File log runtime đang được ghi tại: {_LOG_FILE_PATH}")
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "")
@@ -76,6 +145,13 @@ class NotebookPayload(BaseModel):
     )
     text_data: Optional[str] = Field(
         None, description="Dữ liệu văn bản đính kèm tùy chọn từ notebook"
+    )
+
+
+class UpdateJobIdPayload(BaseModel):
+    job_id: Optional[str] = Field(
+        None,
+        description="Job ID mới cần kích hoạt. Truyền null hoặc chuỗi rỗng để xóa giới hạn.",
     )
 
 
@@ -242,8 +318,13 @@ class KaggleService:
 # ==========================================
 # 5. KHỞI TẠO ỨNG DỤNG & CƠ CHẾ XÁC THỰC
 # ==========================================
-app = FastAPI(title="Remote Notebook Coordinator", version="1.1.0")
+app = FastAPI(title="Remote Notebook Coordinator", version="1.2.0")
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=True)
+
+# Mount thư mục static để phục vụ CSS cho admin panel
+_STATIC_DIR = BASE_DIR / "src" / "static"
+_STATIC_DIR.mkdir(parents=True, exist_ok=True)
+app.mount("/static", StaticFiles(directory=str(_STATIC_DIR)), name="static")
 
 
 def verify_api_key(api_key: str = Depends(api_key_header)):
@@ -270,6 +351,18 @@ async def receive_notebook_webhook(
     logger.info(
         f"Tiếp nhận dữ liệu từ Job [{payload.job_id}] | Phân loại: {payload.notebook_index_type} | Trạng thái: {payload.status}"
     )
+
+    # Kiểm tra job_id filter — từ chối nếu không khớp với active_job_id
+    active_job_id = server_config.get("active_job_id")
+    if active_job_id and payload.job_id != active_job_id:
+        logger.warning(
+            f"Từ chối request: Job ID [{payload.job_id}] không khớp với "
+            f"active_job_id [{active_job_id}] đang được lưu trên server."
+        )
+        raise HTTPException(
+            status_code=403,
+            detail=f"Job ID không hợp lệ. Server hiện chỉ chấp nhận job_id: [{active_job_id}]",
+        )
 
     # Gửi thông báo tức thì đến Telegram cho mọi payload nhận được
     notify_message = (
@@ -331,9 +424,58 @@ async def healthcheck():
     - Trả về thời gian hiện tại theo chuẩn ISO 8601.
     - Dùng để các công cụ bên thứ 3 (như UptimeRobot) ping giữ máy chủ luôn thức.
     """
-    # Lấy thời gian UTC hiện tại và chuyển sang định dạng chuẩn ISO 8601
     current_time_iso = datetime.now(timezone.utc).isoformat()
-
     logger.info("Healthcheck pinged. Hệ thống hoạt động bình thường.")
-
     return {"name": "healthcheck response", "timestamp": current_time_iso}
+
+
+# ==========================================
+# 7. ADMIN PANEL
+# ==========================================
+@app.get("/admin/manage", response_class=HTMLResponse, include_in_schema=False)
+async def admin_manage():
+    """Trả về trang HTML cho Admin Panel."""
+    html_path = BASE_DIR / "src" / "templates" / "admin.html"
+    return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
+
+
+@app.get("/admin/api/logs", response_class=PlainTextResponse, include_in_schema=False)
+async def admin_get_logs():
+    """Trả về toàn bộ nội dung file runtime.log dưới dạng plain text."""
+    if not _LOG_FILE_PATH.exists():
+        return PlainTextResponse("")
+    return PlainTextResponse(_LOG_FILE_PATH.read_text(encoding="utf-8"))
+
+
+@app.get("/admin/api/logs/download", include_in_schema=False)
+async def admin_download_logs():
+    """Tải xuống file runtime.log."""
+    if not _LOG_FILE_PATH.exists():
+        raise HTTPException(status_code=404, detail="File log chưa tồn tại.")
+    return FileResponse(
+        path=str(_LOG_FILE_PATH),
+        filename="runtime.log",
+        media_type="text/plain",
+    )
+
+
+@app.get("/admin/api/config", include_in_schema=False)
+async def admin_get_config():
+    """Trả về cấu hình hiện tại của server (active_job_id)."""
+    return server_config
+
+
+@app.post("/admin/api/config/job-id", include_in_schema=False)
+async def admin_update_job_id(payload: UpdateJobIdPayload):
+    """Cập nhật active_job_id. Truyền null hoặc chuỗi rỗng để xóa giới hạn."""
+    global server_config
+    new_job_id = payload.job_id.strip() if payload.job_id else None
+    server_config["active_job_id"] = new_job_id or None
+    _save_config(server_config)
+    logger.info(
+        f"[Admin] Đã cập nhật active_job_id thành: {server_config['active_job_id']!r}"
+    )
+    return {
+        "message": "Cập nhật cấu hình thành công.",
+        "active_job_id": server_config["active_job_id"],
+    }
