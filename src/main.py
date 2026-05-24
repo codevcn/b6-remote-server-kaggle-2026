@@ -275,6 +275,7 @@ class KaggleService:
                 meta = json.loads(metadata_path.read_text(encoding="utf-8"))
                 if meta.get("machine_shape") == "None":
                     meta["machine_shape"] = None
+                meta["enable_internet"] = True
                 metadata_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")
                 logger.info(f"Đã chuẩn hóa kernel-metadata.json cho {notebook_ref}")
 
