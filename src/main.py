@@ -271,6 +271,15 @@ async def receive_notebook_webhook(
         f"Tiếp nhận dữ liệu từ Job [{payload.job_id}] | Phân loại: {payload.notebook_index_type} | Trạng thái: {payload.status}"
     )
 
+    # Gửi thông báo tức thì đến Telegram cho mọi payload nhận được
+    notify_message = (
+        f"📩 <b>[B6 Team - Tín hiệu Notebook đến server]</b>\n\n"
+        f"Job ID    : <code>{payload.job_id}</code>\n"
+        f"Loại      : <b>{payload.notebook_index_type.upper()}</b>\n"
+        f"Trạng thái: <b>{payload.status.upper()}</b>"
+    )
+    background_tasks.add_task(TelegramService.send_message, notify_message)
+
     if payload.job_id not in jobs_state:
         jobs_state[payload.job_id] = {"status": "running", "history": []}
     jobs_state[payload.job_id]["history"].append(payload.dict())
