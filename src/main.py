@@ -131,7 +131,7 @@ class NotebookPayload(BaseModel):
     job_id: str = Field(
         ..., description="Mã định danh đại diện cho toàn bộ chuỗi công việc"
     )
-    notebook_index_type: Literal["start", "mid", "end"] = Field(
+    notebook_index_type: Literal["start", "mid", "end", "private"] = Field(
         ..., description="Vị trí của notebook trong chuỗi"
     )
     status: Literal["started", "completed"] = Field(
