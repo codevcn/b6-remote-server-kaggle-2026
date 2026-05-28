@@ -141,6 +141,20 @@
                 <div id="config-feedback" class="feedback" style="display:none"></div>
             </div>
 
+            <!-- Card: Xem cấu hình configs.json -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <span class="config-label">Nội dung tệp cấu hình (configs.json)</span>
+                    <div class="section-actions">
+                        <button class="btn btn-sm btn-secondary" onclick="loadConfigFile()">🔄 Làm mới</button>
+                        <button class="btn btn-sm btn-secondary" id="btn-copy-config-file" onclick="copyConfigFile()">📋 Sao chép</button>
+                    </div>
+                </div>
+                <div class="log-container" style="margin-top: 12px;">
+                    <pre id="config-file-content" class="log-viewer" style="max-height: 350px;">Đang tải cấu hình...</pre>
+                </div>
+            </div>
+
         </section>
 
         <!-- ── Section 3: Kaggle Variables ── -->
@@ -297,6 +311,9 @@
             elDisplay.innerHTML = '<span class="no-filter-text">❌ Lỗi khi tải cấu hình</span>';
             elHint.textContent = err.message;
         }
+
+        // Tự động tải nội dung file configs.json
+        loadConfigFile();
     }
 
     async function submitJobId() {
@@ -490,6 +507,40 @@
             }
         } catch (err) {
             showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi kết nối: ' + err.message);
+        }
+    }
+
+    async function loadConfigFile() {
+        const elContent = document.getElementById('config-file-content');
+        try {
+            const res = await fetch('/admin/api/config/file');
+            const text = await res.text();
+            
+            try {
+                const jsonObj = JSON.parse(text);
+                elContent.textContent = JSON.stringify(jsonObj, null, 2);
+            } catch {
+                elContent.textContent = text.trim() || '{}';
+            }
+        } catch (err) {
+            elContent.textContent = '❌ Lỗi khi tải tệp cấu hình:\n' + err.message;
+        }
+    }
+
+    async function copyConfigFile() {
+        const content = document.getElementById('config-file-content').textContent;
+        const btn     = document.getElementById('btn-copy-config-file');
+        try {
+            await navigator.clipboard.writeText(content);
+            btn.textContent = '✅ Đã sao chép!';
+            btn.classList.add('btn-success');
+        } catch {
+            btn.textContent = '❌ Lỗi!';
+        } finally {
+            setTimeout(() => {
+                btn.textContent = '📋 Sao chép';
+                btn.classList.remove('btn-success');
+            }, 2200);
         }
     }
 

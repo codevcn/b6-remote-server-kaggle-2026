@@ -600,6 +600,20 @@ async def admin_update_job_id(payload: UpdateJobIdPayload):
     }
 
 
+@app.get("/admin/api/config/file", include_in_schema=False)
+async def admin_get_config_file():
+    """Trả về nội dung đầy đủ của tệp tin configs.json dưới dạng văn bản."""
+    if not CONFIG_PATH.exists():
+        return PlainTextResponse("{}")
+    try:
+        return PlainTextResponse(CONFIG_PATH.read_text(encoding="utf-8"))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Lỗi khi đọc tệp tin cấu hình: {str(e)}"
+        )
+
+
 @app.get("/admin/api/config/kaggle-vars", include_in_schema=False)
 async def admin_get_kaggle_vars():
     """

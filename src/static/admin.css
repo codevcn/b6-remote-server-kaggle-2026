@@ -493,6 +493,7 @@ body {
     border: 1px solid var(--border);
     background: var(--bg-input);
     margin-top: 8px;
+    box-shadow: var(--shadow-sm);
 }
 
 .vars-table {
@@ -500,11 +501,14 @@ body {
     border-collapse: collapse;
     font-size: var(--body-size);
     text-align: left;
+    table-layout: fixed; /* Khóa chiều rộng cột */
 }
 
 .vars-table th, .vars-table td {
-    padding: 12px 16px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    line-height: 1.6;
 }
 
 .vars-table th {
@@ -513,15 +517,22 @@ body {
     font-size: var(--small-size);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.8px;
 }
+
+/* Đặt độ rộng cố định và cân đối cho từng cột để tránh dính chữ */
+.vars-table th:nth-child(1), .vars-table td:nth-child(1) { width: 22%; } /* Username */
+.vars-table th:nth-child(2), .vars-table td:nth-child(2) { width: 28%; } /* Notebook Slug */
+.vars-table th:nth-child(3), .vars-table td:nth-child(3) { width: 22%; } /* Variable */
+.vars-table th:nth-child(4), .vars-table td:nth-child(4) { width: 18%; } /* Value */
+.vars-table th:nth-child(5), .vars-table td:nth-child(5) { width: 10%; text-align: right; } /* Action */
 
 .vars-table tbody tr {
     transition: background var(--transition);
 }
 
 .vars-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .vars-table tbody tr:last-child td {
@@ -531,35 +542,41 @@ body {
 .table-empty {
     text-align: center;
     color: var(--text-secondary);
-    padding: 32px !important;
+    padding: 40px !important;
     font-style: italic;
 }
 
-/* Badges & Codes styling */
+/* Badges & Codes styling - Tối ưu khoảng cách */
 .user-badge {
     background: var(--accent-dim);
     color: var(--accent-hover);
     border: 1px solid var(--accent-border);
-    padding: 3px 8px;
-    border-radius: 4px;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
     font-weight: 500;
-    font-size: var(--small-size);
+    font-size: 13px;
+    display: inline-block;
 }
 
 .slug-badge {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.04);
     color: var(--text-primary);
     border: 1px solid var(--border-strong);
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: var(--small-size);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
     font-family: var(--font-mono);
+    display: inline-block;
+    word-break: break-all; /* Ngắt dòng khi slug quá dài */
 }
 
 .var-code {
     font-family: var(--font-mono);
     color: #f472b6; /* pink */
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 13px;
+    word-break: break-all;
+    display: inline-block;
 }
 
 .val-code {
@@ -567,8 +584,11 @@ body {
     color: var(--success);
     background: var(--success-dim);
     border: 1px solid var(--success-border);
-    padding: 2px 6px;
-    border-radius: 4px;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    display: inline-block;
+    word-break: break-all;
 }
 
 /* Live Validation Message styling */
