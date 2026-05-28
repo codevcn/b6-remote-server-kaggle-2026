@@ -1,435 +1,594 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin — Kaggle Master Controller</title>
-    <meta name="description" content="Bảng điều khiển quản trị Kaggle Master Controller — B6 Team" />
-    <link rel="stylesheet" href="/static/admin.css" />
-</head>
-<body>
-<div class="layout">
-
-    <!-- ══════════ HEADER ══════════ -->
-    <header class="header">
+    <meta
+      name="description"
+      content="Bảng điều khiển quản trị Kaggle Master Controller — B6 Team"
+    />
+    <link rel="stylesheet" href="/static/admin.css?version=1.0" />
+  </head>
+  <body>
+    <div class="layout">
+      <!-- ══════════ HEADER ══════════ -->
+      <header class="header">
         <div class="header-inner">
-            <div class="header-brand">
-                <span class="header-icon">⚡</span>
-                <div>
-                    <h1 class="header-title">Kaggle Master Controller</h1>
-                    <p class="header-subtitle">B6 Team — Admin Panel</p>
-                </div>
+          <div class="header-brand">
+            <span class="header-icon">⚡</span>
+            <div>
+              <h1 class="header-title">Kaggle Master Controller</h1>
+              <p class="header-subtitle">B6 Team — Admin Panel</p>
             </div>
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                <span>Server online</span>
-            </div>
+          </div>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>Server online</span>
+          </div>
         </div>
-    </header>
+      </header>
 
-    <!-- ══════════ MAIN ══════════ -->
-    <main class="main">
-
+      <!-- ══════════ MAIN ══════════ -->
+      <main class="main">
         <!-- ── Section: Switcher (Trang chủ) ── -->
         <section id="section-switcher" class="section active">
-            <div class="switcher-header">
-                <h2 class="section-title">Bảng điều khiển</h2>
-                <p class="section-desc">Chọn tính năng bạn muốn quản lý</p>
-            </div>
-            <div class="switcher-grid">
+          <div class="switcher-header">
+            <h2 class="section-title">Bảng điều khiển</h2>
+            <p class="section-desc">Chọn tính năng bạn muốn quản lý</p>
+          </div>
+          <div class="switcher-grid">
+            <button
+              class="nav-card"
+              id="btn-nav-logs"
+              onclick="showSection('logs')"
+            >
+              <span class="nav-card-icon">📋</span>
+              <div class="nav-card-body">
+                <h3 class="nav-card-title">Runtime Logs</h3>
+                <p class="nav-card-desc">
+                  Xem, sao chép và tải xuống log hoạt động của server
+                </p>
+              </div>
+              <span class="nav-card-arrow">→</span>
+            </button>
 
-                <button class="nav-card" id="btn-nav-logs" onclick="showSection('logs')">
-                    <span class="nav-card-icon">📋</span>
-                    <div class="nav-card-body">
-                        <h3 class="nav-card-title">Runtime Logs</h3>
-                        <p class="nav-card-desc">Xem, sao chép và tải xuống log hoạt động của server</p>
-                    </div>
-                    <span class="nav-card-arrow">→</span>
-                </button>
+            <button
+              class="nav-card"
+              id="btn-nav-config"
+              onclick="showSection('config')"
+            >
+              <span class="nav-card-icon">⚙️</span>
+              <div class="nav-card-body">
+                <h3 class="nav-card-title">Cấu hình Job ID</h3>
+                <p class="nav-card-desc">
+                  Quản lý Job ID được phép gửi request đến server
+                </p>
+              </div>
+              <span class="nav-card-arrow">→</span>
+            </button>
 
-                <button class="nav-card" id="btn-nav-config" onclick="showSection('config')">
-                    <span class="nav-card-icon">⚙️</span>
-                    <div class="nav-card-body">
-                        <h3 class="nav-card-title">Cấu hình Job ID</h3>
-                        <p class="nav-card-desc">Quản lý Job ID được phép gửi request đến server</p>
-                    </div>
-                    <span class="nav-card-arrow">→</span>
-                </button>
+            <button
+              class="nav-card"
+              id="btn-nav-kaggle-vars"
+              onclick="showSection('kaggle-vars')"
+            >
+              <span class="nav-card-icon">🔑</span>
+              <div class="nav-card-body">
+                <h3 class="nav-card-title">Cấu hình Biến Kaggle</h3>
+                <p class="nav-card-desc">
+                  Quản lý giá trị biến số của Kaggle Notebook trước khi chạy
+                </p>
+              </div>
+              <span class="nav-card-arrow">→</span>
+            </button>
 
-                <button class="nav-card" id="btn-nav-kaggle-vars" onclick="showSection('kaggle-vars')">
-                    <span class="nav-card-icon">🔑</span>
-                    <div class="nav-card-body">
-                        <h3 class="nav-card-title">Cấu hình Biến Kaggle</h3>
-                        <p class="nav-card-desc">Quản lý giá trị biến số của Kaggle Notebook trước khi chạy</p>
-                    </div>
-                    <span class="nav-card-arrow">→</span>
-                </button>
-
-                <button class="nav-card" id="btn-nav-json-viewer" onclick="showSection('json-viewer')">
-                    <span class="nav-card-icon">📄</span>
-                    <div class="nav-card-body">
-                        <h3 class="nav-card-title">Xem configs.json</h3>
-                        <p class="nav-card-desc">Xem toàn bộ nội dung tệp cấu hình hệ thống với định dạng đẹp</p>
-                    </div>
-                    <span class="nav-card-arrow">→</span>
-                </button>
-
-            </div>
+            <button
+              class="nav-card"
+              id="btn-nav-json-viewer"
+              onclick="showSection('json-viewer')"
+            >
+              <span class="nav-card-icon">📄</span>
+              <div class="nav-card-body">
+                <h3 class="nav-card-title">Xem configs.json</h3>
+                <p class="nav-card-desc">
+                  Xem toàn bộ nội dung tệp cấu hình hệ thống với định dạng đẹp
+                </p>
+              </div>
+              <span class="nav-card-arrow">→</span>
+            </button>
+          </div>
         </section>
 
         <!-- ── Section 1: Logs ── -->
         <section id="section-logs" class="section">
-
-            <div class="section-header">
-                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
-                <h2 class="section-title">📋 Runtime Logs</h2>
-                <div class="section-actions">
-                    <button class="btn btn-secondary" id="btn-copy" onclick="copyLogs()">📋 Sao chép</button>
-                    <a class="btn btn-secondary" href="/admin/api/logs/download" download="runtime.log">⬇️ Tải xuống</a>
-                    <button class="btn btn-secondary" onclick="loadLogs()">🔄 Làm mới</button>
-                </div>
+          <div class="section-header">
+            <button class="btn btn-ghost" onclick="showSection('switcher')">
+              ← Quay lại
+            </button>
+            <h2 class="section-title">📋 Runtime Logs</h2>
+            <div class="section-actions">
+              <button
+                class="btn btn-secondary"
+                id="btn-copy"
+                onclick="copyLogs()"
+              >
+                📋 Sao chép
+              </button>
+              <a
+                class="btn btn-secondary"
+                href="/admin/api/logs/download"
+                download="runtime.log"
+                >⬇️ Tải xuống</a
+              >
+              <button class="btn btn-secondary" onclick="loadLogs()">
+                🔄 Làm mới
+              </button>
             </div>
+          </div>
 
-            <div id="log-loading" class="loading-state" style="display:none">
-                <div class="spinner"></div>
-                <span>Đang tải log...</span>
+          <div id="log-loading" class="loading-state" style="display: none">
+            <div class="spinner"></div>
+            <span>Đang tải log...</span>
+          </div>
+
+          <div class="log-container">
+            <div class="log-meta">
+              <span id="log-line-count">—</span>&nbsp;dòng log gần nhất
             </div>
-
-            <div class="log-container">
-                <div class="log-meta">
-                    <span id="log-line-count">—</span>&nbsp;dòng log gần nhất
-                </div>
-                <pre id="log-content" class="log-viewer">Đang tải nội dung log...</pre>
-            </div>
-
+            <pre id="log-content" class="log-viewer">
+Đang tải nội dung log...</pre
+            >
+          </div>
         </section>
 
         <!-- ── Section 2: Config ── -->
         <section id="section-config" class="section">
+          <div class="section-header">
+            <button class="btn btn-ghost" onclick="showSection('switcher')">
+              ← Quay lại
+            </button>
+            <h2 class="section-title">⚙️ Cấu hình Job ID</h2>
+          </div>
 
-            <div class="section-header">
-                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
-                <h2 class="section-title">⚙️ Cấu hình Job ID</h2>
+          <!-- Card: Hiển thị job_id hiện tại -->
+          <div class="config-card">
+            <div class="config-card-header">
+              <span class="config-label">Job ID đang hoạt động</span>
+              <button
+                class="btn btn-sm btn-ghost"
+                onclick="loadConfig()"
+                title="Làm mới"
+              >
+                🔄
+              </button>
             </div>
-
-            <!-- Card: Hiển thị job_id hiện tại -->
-            <div class="config-card">
-                <div class="config-card-header">
-                    <span class="config-label">Job ID đang hoạt động</span>
-                    <button class="btn btn-sm btn-ghost" onclick="loadConfig()" title="Làm mới">🔄</button>
-                </div>
-                <div class="job-id-display" id="current-job-id">
-                    <span class="loading-text">Đang tải...</span>
-                </div>
-                <p class="config-hint" id="config-hint-text">Đang kiểm tra cấu hình...</p>
+            <div class="job-id-display" id="current-job-id">
+              <span class="loading-text">Đang tải...</span>
             </div>
+            <p class="config-hint" id="config-hint-text">
+              Đang kiểm tra cấu hình...
+            </p>
+          </div>
 
-            <!-- Card: Cập nhật job_id -->
-            <div class="config-card">
-                <div class="config-card-header">
-                    <span class="config-label">Cập nhật Job ID</span>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="input-job-id">Job ID mới</label>
-                    <input
-                        type="text"
-                        id="input-job-id"
-                        class="form-input"
-                        placeholder="Nhập job_id mới (ví dụ: broccoli-02)"
-                        autocomplete="off"
-                        spellcheck="false"
-                    />
-                    <p class="form-hint">
-                        Để trống và nhấn "Xóa giới hạn" nếu muốn server chấp nhận mọi Job ID.
-                    </p>
-                </div>
-                <div class="form-actions">
-                    <button class="btn btn-primary" id="btn-submit-job" onclick="submitJobId()">✅ Cập nhật Job ID</button>
-                    <button class="btn btn-danger" id="btn-clear-job" onclick="clearJobId()">🗑️ Xóa giới hạn</button>
-                </div>
-                <div id="config-feedback" class="feedback" style="display:none"></div>
+          <!-- Card: Cập nhật job_id -->
+          <div class="config-card">
+            <div class="config-card-header">
+              <span class="config-label">Cập nhật Job ID</span>
             </div>
-
-            <!-- Card: Xem cấu hình configs.json -->
-            <div class="config-card">
-                <div class="config-card-header">
-                    <span class="config-label">Nội dung tệp cấu hình (configs.json)</span>
-                    <div class="section-actions">
-                        <button class="btn btn-sm btn-secondary" onclick="loadConfigFile()">🔄 Làm mới</button>
-                        <button class="btn btn-sm btn-secondary" id="btn-copy-config-file" onclick="copyConfigFile()">📋 Sao chép</button>
-                    </div>
-                </div>
-                <div class="log-container" style="margin-top: 12px;">
-                    <pre id="config-file-content" class="log-viewer" style="max-height: 350px;">Đang tải cấu hình...</pre>
-                </div>
+            <div class="form-group">
+              <label class="form-label" for="input-job-id">Job ID mới</label>
+              <input
+                type="text"
+                id="input-job-id"
+                class="form-input"
+                placeholder="Nhập job_id mới (ví dụ: broccoli-02)"
+                autocomplete="off"
+                spellcheck="false"
+              />
+              <p class="form-hint">
+                Để trống và nhấn "Xóa giới hạn" nếu muốn server chấp nhận mọi
+                Job ID.
+              </p>
             </div>
+            <div class="form-actions">
+              <button
+                class="btn btn-primary"
+                id="btn-submit-job"
+                onclick="submitJobId()"
+              >
+                ✅ Cập nhật Job ID
+              </button>
+              <button
+                class="btn btn-danger"
+                id="btn-clear-job"
+                onclick="clearJobId()"
+              >
+                🗑️ Xóa giới hạn
+              </button>
+            </div>
+            <div
+              id="config-feedback"
+              class="feedback"
+              style="display: none"
+            ></div>
+          </div>
 
+          <!-- Card: Xem cấu hình configs.json -->
+          <div class="config-card">
+            <div class="config-card-header">
+              <span class="config-label"
+                >Nội dung tệp cấu hình (configs.json)</span
+              >
+              <div class="section-actions">
+                <button
+                  class="btn btn-sm btn-secondary"
+                  onclick="loadConfigFile()"
+                >
+                  🔄 Làm mới
+                </button>
+                <button
+                  class="btn btn-sm btn-secondary"
+                  id="btn-copy-config-file"
+                  onclick="copyConfigFile()"
+                >
+                  📋 Sao chép
+                </button>
+              </div>
+            </div>
+            <div class="log-container" style="margin-top: 12px">
+              <pre
+                id="config-file-content"
+                class="log-viewer"
+                style="max-height: 350px"
+              >
+Đang tải cấu hình...</pre
+              >
+            </div>
+          </div>
         </section>
 
         <!-- ── Section 3: Kaggle Variables ── -->
         <section id="section-kaggle-vars" class="section">
-            <div class="section-header">
-                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
-                <h2 class="section-title">🔑 Cấu hình Biến Kaggle</h2>
-            </div>
+          <div class="section-header">
+            <button class="btn btn-ghost" onclick="showSection('switcher')">
+              ← Quay lại
+            </button>
+            <h2 class="section-title">🔑 Cấu hình Biến Kaggle</h2>
+          </div>
 
-            <!-- Card: Danh sách biến hiện tại -->
-            <div class="config-card">
-                <div class="config-card-header">
-                    <span class="config-label">Danh sách biến đang cấu hình</span>
-                    <button class="btn btn-sm btn-ghost" onclick="loadKaggleVars()" title="Làm mới">🔄</button>
-                </div>
-                <div class="table-container">
-                    <table class="vars-table" id="kaggle-vars-table">
-                        <thead>
-                            <tr>
-                                <th>Kaggle Username</th>
-                                <th>Notebook Slug</th>
-                                <th>Tên biến</th>
-                                <th>Giá trị mới</th>
-                                <th style="text-align: right;">Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody id="kaggle-vars-tbody">
-                            <tr>
-                                <td colspan="5" class="table-empty">Đang tải cấu hình biến...</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+          <!-- Card: Danh sách biến hiện tại -->
+          <div class="config-card">
+            <div class="config-card-header">
+              <span class="config-label">Danh sách biến đang cấu hình</span>
+              <button
+                class="btn btn-sm btn-ghost"
+                onclick="loadKaggleVars()"
+                title="Làm mới"
+              >
+                🔄
+              </button>
             </div>
+            <div class="table-container">
+              <table class="vars-table" id="kaggle-vars-table">
+                <thead>
+                  <tr>
+                    <th>Kaggle Username</th>
+                    <th>Notebook Slug</th>
+                    <th>Tên biến</th>
+                    <th>Giá trị mới</th>
+                    <th style="text-align: right">Hành động</th>
+                  </tr>
+                </thead>
+                <tbody id="kaggle-vars-tbody">
+                  <tr>
+                    <td colspan="5" class="table-empty">
+                      Đang tải cấu hình biến...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-            <!-- Card: Thêm mới hoặc cập nhật biến -->
-            <div class="config-card">
-                <div class="config-card-header">
-                    <span class="config-label">Thêm mới / Cập nhật biến số</span>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="input-kaggle-var">Biến Kaggle Notebook cần đổi giá trị</label>
-                    <input
-                        type="text"
-                        id="input-kaggle-var"
-                        class="form-input"
-                        placeholder="username/notebook-slug/var_name/new_value"
-                        autocomplete="off"
-                        spellcheck="false"
-                        oninput="validateKaggleVarInput()"
-                    />
-                    <p class="form-hint">
-                        Nhập theo định dạng: <code>{kaggle username}/{notebook slug}/{var}/{new value}</code>
-                        <br>Ví dụ: <code>hipbiquang/omnivoice-speech-flow/MAX_GAP_BETWEEN_BLOCKS_IN_MS/695</code>
-                    </p>
-                    <!-- Live validation message -->
-                    <div id="var-validation-msg" class="validation-msg" style="display:none"></div>
-                </div>
-                <div class="form-actions">
-                    <button class="btn btn-primary" id="btn-submit-var" onclick="submitKaggleVar()" disabled>✅ Lưu cấu hình biến</button>
-                </div>
-                <div id="kaggle-var-feedback" class="feedback" style="display:none"></div>
+          <!-- Card: Thêm mới hoặc cập nhật biến -->
+          <div class="config-card">
+            <div class="config-card-header">
+              <span class="config-label">Thêm mới / Cập nhật biến số</span>
             </div>
+            <div class="form-group">
+              <label class="form-label" for="input-kaggle-var"
+                >Biến Kaggle Notebook cần đổi giá trị</label
+              >
+              <input
+                type="text"
+                id="input-kaggle-var"
+                class="form-input"
+                placeholder="username/notebook-slug/var_name/new_value"
+                autocomplete="off"
+                spellcheck="false"
+                oninput="validateKaggleVarInput()"
+              />
+              <p class="form-hint">
+                Nhập theo định dạng:
+                <code>{kaggle username}/{notebook slug}/{var}/{new value}</code>
+                <br />Ví dụ:
+                <code
+                  >hipbiquang/omnivoice-speech-flow/MAX_GAP_BETWEEN_BLOCKS_IN_MS/695</code
+                >
+              </p>
+              <!-- Live validation message -->
+              <div
+                id="var-validation-msg"
+                class="validation-msg"
+                style="display: none"
+              ></div>
+            </div>
+            <div class="form-actions">
+              <button
+                class="btn btn-primary"
+                id="btn-submit-var"
+                onclick="submitKaggleVar()"
+                disabled
+              >
+                ✅ Lưu cấu hình biến
+              </button>
+            </div>
+            <div
+              id="kaggle-var-feedback"
+              class="feedback"
+              style="display: none"
+            ></div>
+          </div>
         </section>
 
         <!-- ── Section 4: JSON Viewer ── -->
         <section id="section-json-viewer" class="section">
-            <div class="section-header">
-                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
-                <h2 class="section-title">📄 Xem nội dung configs.json</h2>
-                <div class="section-actions">
-                    <button class="btn btn-secondary" onclick="loadJsonViewer()">🔄 Làm mới</button>
-                    <button class="btn btn-secondary" id="btn-copy-json-viewer" onclick="copyJsonViewer()">📋 Sao chép</button>
-                </div>
+          <div class="section-header">
+            <button class="btn btn-ghost" onclick="showSection('switcher')">
+              ← Quay lại
+            </button>
+            <h2 class="section-title">📄 Xem nội dung configs.json</h2>
+            <div class="section-actions">
+              <button class="btn btn-secondary" onclick="loadJsonViewer()">
+                🔄 Làm mới
+              </button>
+              <button
+                class="btn btn-secondary"
+                id="btn-copy-json-viewer"
+                onclick="copyJsonViewer()"
+              >
+                📋 Sao chép
+              </button>
             </div>
+          </div>
 
-            <!-- Meta info -->
-            <div class="json-viewer-meta" id="json-viewer-meta">
-                <span class="json-meta-tag">📁 src/configs/configs.json</span>
-                <span class="json-meta-sep">·</span>
-                <span id="json-viewer-size">—</span>
-                <span class="json-meta-sep">·</span>
-                <span id="json-viewer-updated">Chưa tải</span>
-            </div>
+          <!-- Meta info -->
+          <div class="json-viewer-meta" id="json-viewer-meta">
+            <span class="json-meta-tag">📁 src/configs/configs.json</span>
+            <span class="json-meta-sep">·</span>
+            <span id="json-viewer-size">—</span>
+            <span class="json-meta-sep">·</span>
+            <span id="json-viewer-updated">Chưa tải</span>
+          </div>
 
-            <!-- Viewer card -->
-            <div class="config-card json-viewer-card">
-                <div id="json-viewer-loading" class="loading-state" style="display:none">
-                    <div class="spinner"></div>
-                    <span>Đang tải cấu hình...</span>
-                </div>
-                <pre id="json-viewer-content" class="json-highlighted">Đang tải cấu hình...</pre>
+          <!-- Viewer card -->
+          <div class="config-card json-viewer-card">
+            <div
+              id="json-viewer-loading"
+              class="loading-state"
+              style="display: none"
+            >
+              <div class="spinner"></div>
+              <span>Đang tải cấu hình...</span>
             </div>
+            <pre id="json-viewer-content" class="json-highlighted">
+Đang tải cấu hình...</pre
+            >
+          </div>
 
-            <!-- Key Stats -->
-            <div id="json-stats-row" class="json-stats-bar" style="display:none">
-                <span class="json-stat-item"><span class="json-stat-label">Kaggle Users</span> <span class="json-stat-value" id="stat-users">—</span></span>
-                <span class="json-stat-sep">, </span>
-                <span class="json-stat-item"><span class="json-stat-label">Notebooks cấu hình</span> <span class="json-stat-value" id="stat-notebooks">—</span></span>
-                <span class="json-stat-sep">, </span>
-                <span class="json-stat-item"><span class="json-stat-label">Tổng biến số</span> <span class="json-stat-value" id="stat-vars">—</span></span>
-                <span class="json-stat-sep">, </span>
-                <span class="json-stat-item"><span class="json-stat-label">Active Job ID</span> <span class="json-stat-value" id="stat-job-id">—</span></span>
-            </div>
+          <!-- Key Stats -->
+          <div id="json-stats-row" class="json-stats-bar" style="display: none">
+            <span class="json-stat-item"
+              ><span class="json-stat-label">Kaggle Users</span>
+              <span class="json-stat-value" id="stat-users">—</span></span
+            >
+            <span class="json-stat-sep">, </span>
+            <span class="json-stat-item"
+              ><span class="json-stat-label">Notebooks cấu hình</span>
+              <span class="json-stat-value" id="stat-notebooks">—</span></span
+            >
+            <span class="json-stat-sep">, </span>
+            <span class="json-stat-item"
+              ><span class="json-stat-label">Tổng biến số</span>
+              <span class="json-stat-value" id="stat-vars">—</span></span
+            >
+            <span class="json-stat-sep">, </span>
+            <span class="json-stat-item"
+              ><span class="json-stat-label">Active Job ID</span>
+              <span class="json-stat-value" id="stat-job-id">—</span></span
+            >
+          </div>
         </section>
+      </main>
+    </div>
 
-    </main>
-</div>
-
-<!-- ══════════ JAVASCRIPT ══════════ -->
-<script>
-    /* ──────────────────────────────────────────
+    <!-- ══════════ JAVASCRIPT ══════════ -->
+    <script>
+      /* ──────────────────────────────────────────
        SECTION SWITCHING
        ────────────────────────────────────────── */
-    function showSection(name) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById('section-' + name).classList.add('active');
-        if (name === 'logs')        loadLogs();
-        if (name === 'config')      loadConfig();
-        if (name === 'kaggle-vars') loadKaggleVars();
-        if (name === 'json-viewer') loadJsonViewer();
-    }
+      function showSection(name) {
+        document
+          .querySelectorAll(".section")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById("section-" + name).classList.add("active");
+        if (name === "logs") loadLogs();
+        if (name === "config") loadConfig();
+        if (name === "kaggle-vars") loadKaggleVars();
+        if (name === "json-viewer") loadJsonViewer();
+      }
 
-    /* ──────────────────────────────────────────
+      /* ──────────────────────────────────────────
        SECTION 1 — LOGS
        ────────────────────────────────────────── */
-    async function loadLogs() {
-        const elContent   = document.getElementById('log-content');
-        const elLoading   = document.getElementById('log-loading');
-        const elLineCount = document.getElementById('log-line-count');
+      async function loadLogs() {
+        const elContent = document.getElementById("log-content");
+        const elLoading = document.getElementById("log-loading");
+        const elLineCount = document.getElementById("log-line-count");
 
-        elLoading.style.display = 'flex';
-        elContent.style.opacity = '0.4';
+        elLoading.style.display = "flex";
+        elContent.style.opacity = "0.4";
 
         try {
-            const res  = await fetch('/admin/api/logs');
-            const text = await res.text();
+          const res = await fetch("/admin/api/logs");
+          const text = await res.text();
 
-            elContent.textContent = text.trim() || '(Chưa có log nào được ghi.)';
+          elContent.textContent = text.trim() || "(Chưa có log nào được ghi.)";
 
-            const lines = text.trim() ? text.trim().split('\n').length : 0;
-            elLineCount.textContent = lines;
+          const lines = text.trim() ? text.trim().split("\n").length : 0;
+          elLineCount.textContent = lines;
 
-            // Cuộn xuống cuối để xem log mới nhất
-            elContent.scrollTop = elContent.scrollHeight;
+          // Cuộn xuống cuối để xem log mới nhất
+          elContent.scrollTop = elContent.scrollHeight;
         } catch (err) {
-            elContent.textContent = '❌ Lỗi: Không thể tải log.\n' + err.message;
+          elContent.textContent = "❌ Lỗi: Không thể tải log.\n" + err.message;
         } finally {
-            elLoading.style.display = 'none';
-            elContent.style.opacity = '1';
+          elLoading.style.display = "none";
+          elContent.style.opacity = "1";
         }
-    }
+      }
 
-    async function copyLogs() {
-        const content = document.getElementById('log-content').textContent;
-        const btn     = document.getElementById('btn-copy');
+      async function copyLogs() {
+        const content = document.getElementById("log-content").textContent;
+        const btn = document.getElementById("btn-copy");
         try {
-            await navigator.clipboard.writeText(content);
-            btn.textContent = '✅ Đã sao chép!';
-            btn.classList.add('btn-success');
+          await navigator.clipboard.writeText(content);
+          btn.textContent = "✅ Đã sao chép!";
+          btn.classList.add("btn-success");
         } catch {
-            btn.textContent = '❌ Lỗi!';
+          btn.textContent = "❌ Lỗi!";
         } finally {
-            setTimeout(() => {
-                btn.textContent = '📋 Sao chép';
-                btn.classList.remove('btn-success');
-            }, 2200);
+          setTimeout(() => {
+            btn.textContent = "📋 Sao chép";
+            btn.classList.remove("btn-success");
+          }, 2200);
         }
-    }
+      }
 
-    /* ──────────────────────────────────────────
+      /* ──────────────────────────────────────────
        SECTION 2 — CONFIG
        ────────────────────────────────────────── */
-    async function loadConfig() {
-        const elDisplay = document.getElementById('current-job-id');
-        const elHint    = document.getElementById('config-hint-text');
+      async function loadConfig() {
+        const elDisplay = document.getElementById("current-job-id");
+        const elHint = document.getElementById("config-hint-text");
 
         elDisplay.innerHTML = '<span class="loading-text">Đang tải...</span>';
-        elDisplay.className = 'job-id-display';
+        elDisplay.className = "job-id-display";
 
         try {
-            const res  = await fetch('/admin/api/config');
-            const data = await res.json();
-            const jobId = data.active_job_id;
+          const res = await fetch("/admin/api/config");
+          const data = await res.json();
+          const jobId = data.active_job_id;
 
-            if (jobId) {
-                elDisplay.innerHTML = `<code class="job-id-code">${escHtml(jobId)}</code>`;
-                elDisplay.classList.add('has-filter');
-                elHint.textContent = 'Server đang lọc — chỉ chấp nhận request có Job ID khớp với giá trị trên.';
-            } else {
-                elDisplay.innerHTML = '<span class="no-filter-text">— Không giới hạn —</span>';
-                elDisplay.classList.add('no-filter');
-                elHint.textContent = 'Server đang chấp nhận mọi Job ID. Hãy cấu hình để lọc request theo Job ID cụ thể.';
-            }
+          if (jobId) {
+            elDisplay.innerHTML = `<code class="job-id-code">${escHtml(jobId)}</code>`;
+            elDisplay.classList.add("has-filter");
+            elHint.textContent =
+              "Server đang lọc — chỉ chấp nhận request có Job ID khớp với giá trị trên.";
+          } else {
+            elDisplay.innerHTML =
+              '<span class="no-filter-text">— Không giới hạn —</span>';
+            elDisplay.classList.add("no-filter");
+            elHint.textContent =
+              "Server đang chấp nhận mọi Job ID. Hãy cấu hình để lọc request theo Job ID cụ thể.";
+          }
         } catch (err) {
-            elDisplay.innerHTML = '<span class="no-filter-text">❌ Lỗi khi tải cấu hình</span>';
-            elHint.textContent = err.message;
+          elDisplay.innerHTML =
+            '<span class="no-filter-text">❌ Lỗi khi tải cấu hình</span>';
+          elHint.textContent = err.message;
         }
 
         // Tự động tải nội dung file configs.json
         loadConfigFile();
-    }
+      }
 
-    async function submitJobId() {
-        const jobId = document.getElementById('input-job-id').value.trim();
+      async function submitJobId() {
+        const jobId = document.getElementById("input-job-id").value.trim();
         if (!jobId) {
-            showFeedback('warning', '⚠️ Vui lòng nhập Job ID. Để xóa giới hạn, hãy nhấn nút "Xóa giới hạn".');
-            return;
+          showFeedback(
+            "warning",
+            '⚠️ Vui lòng nhập Job ID. Để xóa giới hạn, hãy nhấn nút "Xóa giới hạn".',
+          );
+          return;
         }
         await updateJobId(jobId);
-    }
+      }
 
-    async function clearJobId() {
-        if (!confirm('Xác nhận xóa giới hạn Job ID?\nSau khi xóa, server sẽ chấp nhận mọi request bất kể job_id.')) return;
+      async function clearJobId() {
+        if (
+          !confirm(
+            "Xác nhận xóa giới hạn Job ID?\nSau khi xóa, server sẽ chấp nhận mọi request bất kể job_id.",
+          )
+        )
+          return;
         await updateJobId(null);
-    }
+      }
 
-    async function updateJobId(jobId) {
-        const btnSubmit = document.getElementById('btn-submit-job');
-        const btnClear  = document.getElementById('btn-clear-job');
+      async function updateJobId(jobId) {
+        const btnSubmit = document.getElementById("btn-submit-job");
+        const btnClear = document.getElementById("btn-clear-job");
         btnSubmit.disabled = btnClear.disabled = true;
 
         try {
-            const res  = await fetch('/admin/api/config/job-id', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ job_id: jobId }),
-            });
-            const data = await res.json();
+          const res = await fetch("/admin/api/config/job-id", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ job_id: jobId }),
+          });
+          const data = await res.json();
 
-            if (res.ok) {
-                const msg = jobId
-                    ? `✅ Đã cập nhật. Server giờ chỉ chấp nhận Job ID: <strong>${escHtml(jobId)}</strong>`
-                    : '✅ Đã xóa giới hạn. Server chấp nhận mọi Job ID.';
-                showFeedback('success', msg);
-                document.getElementById('input-job-id').value = '';
-                await loadConfig();
-            } else {
-                showFeedback('error', '❌ Lỗi: ' + (data.detail || 'Không xác định được lỗi.'));
-            }
+          if (res.ok) {
+            const msg = jobId
+              ? `✅ Đã cập nhật. Server giờ chỉ chấp nhận Job ID: <strong>${escHtml(jobId)}</strong>`
+              : "✅ Đã xóa giới hạn. Server chấp nhận mọi Job ID.";
+            showFeedback("success", msg);
+            document.getElementById("input-job-id").value = "";
+            await loadConfig();
+          } else {
+            showFeedback(
+              "error",
+              "❌ Lỗi: " + (data.detail || "Không xác định được lỗi."),
+            );
+          }
         } catch (err) {
-            showFeedback('error', '❌ Lỗi kết nối: ' + err.message);
+          showFeedback("error", "❌ Lỗi kết nối: " + err.message);
         } finally {
-            btnSubmit.disabled = btnClear.disabled = false;
+          btnSubmit.disabled = btnClear.disabled = false;
         }
-    }
+      }
 
-    /* ──────────────────────────────────────────
+      /* ──────────────────────────────────────────
        SECTION 3 — KAGGLE VARIABLES
        ────────────────────────────────────────── */
-    async function loadKaggleVars() {
-        const tbody = document.getElementById('kaggle-vars-tbody');
-        tbody.innerHTML = '<tr><td colspan="5" class="table-empty"><div class="spinner" style="display:inline-block"></div> Đang tải danh sách...</td></tr>';
-        
+      async function loadKaggleVars() {
+        const tbody = document.getElementById("kaggle-vars-tbody");
+        tbody.innerHTML =
+          '<tr><td colspan="5" class="table-empty"><div class="spinner" style="display:inline-block"></div> Đang tải danh sách...</td></tr>';
+
         try {
-            const res = await fetch('/admin/api/config/kaggle-vars');
-            const data = await res.json();
-            
-            if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="table-empty">⚡ Chưa có biến nào được cấu hình.</td></tr>';
-                return;
-            }
-            
-            let html = '';
-            data.forEach(item => {
-                html += `
+          const res = await fetch("/admin/api/config/kaggle-vars");
+          const data = await res.json();
+
+          if (!data || data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="5" class="table-empty">⚡ Chưa có biến nào được cấu hình.</td></tr>';
+            return;
+          }
+
+          let html = "";
+          data.forEach((item) => {
+            html += `
                     <tr>
                         <td><span class="user-badge">${escHtml(item.username)}</span></td>
                         <td><span class="slug-badge">${escHtml(item.notebook_slug)}</span></td>
@@ -440,289 +599,362 @@
                         </td>
                     </tr>
                 `;
-            });
-            tbody.innerHTML = html;
+          });
+          tbody.innerHTML = html;
         } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="5" class="table-empty" style="color:var(--danger)">❌ Lỗi: ${escHtml(err.message)}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="5" class="table-empty" style="color:var(--danger)">❌ Lỗi: ${escHtml(err.message)}</td></tr>`;
         }
-    }
+      }
 
-    function validateKaggleVarInput() {
-        const inputVal = document.getElementById('input-kaggle-var').value.trim();
-        const msgEl = document.getElementById('var-validation-msg');
-        const submitBtn = document.getElementById('btn-submit-var');
-        
+      function validateKaggleVarInput() {
+        const inputVal = document
+          .getElementById("input-kaggle-var")
+          .value.trim();
+        const msgEl = document.getElementById("var-validation-msg");
+        const submitBtn = document.getElementById("btn-submit-var");
+
         if (!inputVal) {
-            msgEl.style.display = 'none';
-            submitBtn.disabled = true;
-            return;
+          msgEl.style.display = "none";
+          submitBtn.disabled = true;
+          return;
         }
-        
-        const parts = inputVal.split('/');
+
+        const parts = inputVal.split("/");
         if (parts.length < 4) {
-            showValidation('error', '⚠️ Định dạng phải có ít nhất 3 dấu gạch chéo: username/slug/variable/new_value');
-            submitBtn.disabled = true;
-            return;
+          showValidation(
+            "error",
+            "⚠️ Định dạng phải có ít nhất 3 dấu gạch chéo: username/slug/variable/new_value",
+          );
+          submitBtn.disabled = true;
+          return;
         }
-        
+
         const username = parts[0].trim();
         const slug = parts[1].trim();
         const variable = parts[2].trim();
-        const value = parts.slice(3).join('/').trim();
-        
+        const value = parts.slice(3).join("/").trim();
+
         if (!username) {
-            showValidation('error', '⚠️ Thiếu Kaggle Username ở phần đầu tiên.');
-            submitBtn.disabled = true;
-            return;
+          showValidation("error", "⚠️ Thiếu Kaggle Username ở phần đầu tiên.");
+          submitBtn.disabled = true;
+          return;
         }
         if (!slug) {
-            showValidation('error', '⚠️ Thiếu Notebook Slug ở phần thứ hai.');
-            submitBtn.disabled = true;
-            return;
+          showValidation("error", "⚠️ Thiếu Notebook Slug ở phần thứ hai.");
+          submitBtn.disabled = true;
+          return;
         }
         if (!variable) {
-            showValidation('error', '⚠️ Thiếu tên biến (Variable) ở phần thứ ba.');
-            submitBtn.disabled = true;
-            return;
+          showValidation(
+            "error",
+            "⚠️ Thiếu tên biến (Variable) ở phần thứ ba.",
+          );
+          submitBtn.disabled = true;
+          return;
         }
         if (!value) {
-            showValidation('error', '⚠️ Thiếu giá trị mới (New value) ở phần thứ tư.');
-            submitBtn.disabled = true;
-            return;
+          showValidation(
+            "error",
+            "⚠️ Thiếu giá trị mới (New value) ở phần thứ tư.",
+          );
+          submitBtn.disabled = true;
+          return;
         }
-        
+
         // Validate tên biến python
         const pythonVarRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
         if (!pythonVarRegex.test(variable)) {
-            showValidation('error', `⚠️ Tên biến '${variable}' không hợp lệ trong Python. Bắt đầu bằng chữ/gạch dưới, chỉ chứa chữ, số, gạch dưới.`);
-            submitBtn.disabled = true;
-            return;
+          showValidation(
+            "error",
+            `⚠️ Tên biến '${variable}' không hợp lệ trong Python. Bắt đầu bằng chữ/gạch dưới, chỉ chứa chữ, số, gạch dưới.`,
+          );
+          submitBtn.disabled = true;
+          return;
         }
-        
+
         // Định dạng đúng!
-        showValidation('success', `👉 Định dạng hợp lệ! Biến <code>${escHtml(variable)}</code> của notebook <code>${escHtml(username)}/${escHtml(slug)}</code> sẽ có giá trị mới.`);
+        showValidation(
+          "success",
+          `👉 Định dạng hợp lệ! Biến <code>${escHtml(variable)}</code> của notebook <code>${escHtml(username)}/${escHtml(slug)}</code> sẽ có giá trị mới.`,
+        );
         submitBtn.disabled = false;
-    }
+      }
 
-    function showValidation(type, html) {
-        const msgEl = document.getElementById('var-validation-msg');
-        msgEl.className = 'validation-msg validation-' + type;
+      function showValidation(type, html) {
+        const msgEl = document.getElementById("var-validation-msg");
+        msgEl.className = "validation-msg validation-" + type;
         msgEl.innerHTML = html;
-        msgEl.style.display = 'block';
-    }
+        msgEl.style.display = "block";
+      }
 
-    async function submitKaggleVar() {
-        const inputVal = document.getElementById('input-kaggle-var').value.trim();
-        const submitBtn = document.getElementById('btn-submit-var');
+      async function submitKaggleVar() {
+        const inputVal = document
+          .getElementById("input-kaggle-var")
+          .value.trim();
+        const submitBtn = document.getElementById("btn-submit-var");
         submitBtn.disabled = true;
-        
+
         try {
-            const res = await fetch('/admin/api/config/kaggle-vars', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ raw_value: inputVal })
-            });
-            const data = await res.json();
-            
-            if (res.ok) {
-                showFeedbackFor('kaggle-var-feedback', 'success', '✅ Đã lưu cấu hình biến thành công!');
-                document.getElementById('input-kaggle-var').value = '';
-                document.getElementById('var-validation-msg').style.display = 'none';
-                await loadKaggleVars();
-            } else {
-                showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi: ' + (data.detail || 'Không thể lưu cấu hình.'));
-            }
+          const res = await fetch("/admin/api/config/kaggle-vars", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ raw_value: inputVal }),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            showFeedbackFor(
+              "kaggle-var-feedback",
+              "success",
+              "✅ Đã lưu cấu hình biến thành công!",
+            );
+            document.getElementById("input-kaggle-var").value = "";
+            document.getElementById("var-validation-msg").style.display =
+              "none";
+            await loadKaggleVars();
+          } else {
+            showFeedbackFor(
+              "kaggle-var-feedback",
+              "error",
+              "❌ Lỗi: " + (data.detail || "Không thể lưu cấu hình."),
+            );
+          }
         } catch (err) {
-            showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi kết nối: ' + err.message);
+          showFeedbackFor(
+            "kaggle-var-feedback",
+            "error",
+            "❌ Lỗi kết nối: " + err.message,
+          );
         } finally {
-            submitBtn.disabled = false;
+          submitBtn.disabled = false;
         }
-    }
+      }
 
-    async function deleteKaggleVar(username, slug, variable) {
-        if (!confirm(`Xác nhận xóa cấu hình biến '${variable}' của notebook '${slug}'?`)) return;
-        
+      async function deleteKaggleVar(username, slug, variable) {
+        if (
+          !confirm(
+            `Xác nhận xóa cấu hình biến '${variable}' của notebook '${slug}'?`,
+          )
+        )
+          return;
+
         try {
-            const res = await fetch('/admin/api/config/kaggle-vars', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, notebook_slug: slug, variable })
-            });
-            const data = await res.json();
-            
-            if (res.ok) {
-                showFeedbackFor('kaggle-var-feedback', 'success', `✅ Đã xóa cấu hình biến '${variable}' thành công.`);
-                await loadKaggleVars();
-            } else {
-                showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi: ' + (data.detail || 'Không thể xóa.'));
-            }
+          const res = await fetch("/admin/api/config/kaggle-vars", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, notebook_slug: slug, variable }),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            showFeedbackFor(
+              "kaggle-var-feedback",
+              "success",
+              `✅ Đã xóa cấu hình biến '${variable}' thành công.`,
+            );
+            await loadKaggleVars();
+          } else {
+            showFeedbackFor(
+              "kaggle-var-feedback",
+              "error",
+              "❌ Lỗi: " + (data.detail || "Không thể xóa."),
+            );
+          }
         } catch (err) {
-            showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi kết nối: ' + err.message);
+          showFeedbackFor(
+            "kaggle-var-feedback",
+            "error",
+            "❌ Lỗi kết nối: " + err.message,
+          );
         }
-    }
+      }
 
-    async function loadConfigFile() {
-        const elContent = document.getElementById('config-file-content');
+      async function loadConfigFile() {
+        const elContent = document.getElementById("config-file-content");
         try {
-            const res = await fetch('/admin/api/config/file');
-            const text = await res.text();
-            
-            try {
-                const jsonObj = JSON.parse(text);
-                elContent.textContent = JSON.stringify(jsonObj, null, 2);
-            } catch {
-                elContent.textContent = text.trim() || '{}';
-            }
+          const res = await fetch("/admin/api/config/file");
+          const text = await res.text();
+
+          try {
+            const jsonObj = JSON.parse(text);
+            elContent.textContent = JSON.stringify(jsonObj, null, 2);
+          } catch {
+            elContent.textContent = text.trim() || "{}";
+          }
         } catch (err) {
-            elContent.textContent = '❌ Lỗi khi tải tệp cấu hình:\n' + err.message;
+          elContent.textContent =
+            "❌ Lỗi khi tải tệp cấu hình:\n" + err.message;
         }
-    }
+      }
 
-    async function copyConfigFile() {
-        const content = document.getElementById('config-file-content').textContent;
-        const btn     = document.getElementById('btn-copy-config-file');
+      async function copyConfigFile() {
+        const content = document.getElementById(
+          "config-file-content",
+        ).textContent;
+        const btn = document.getElementById("btn-copy-config-file");
         try {
-            await navigator.clipboard.writeText(content);
-            btn.textContent = '✅ Đã sao chép!';
-            btn.classList.add('btn-success');
+          await navigator.clipboard.writeText(content);
+          btn.textContent = "✅ Đã sao chép!";
+          btn.classList.add("btn-success");
         } catch {
-            btn.textContent = '❌ Lỗi!';
+          btn.textContent = "❌ Lỗi!";
         } finally {
-            setTimeout(() => {
-                btn.textContent = '📋 Sao chép';
-                btn.classList.remove('btn-success');
-            }, 2200);
+          setTimeout(() => {
+            btn.textContent = "📋 Sao chép";
+            btn.classList.remove("btn-success");
+          }, 2200);
         }
-    }
+      }
 
-    /* ──────────────────────────────────────────
+      /* ──────────────────────────────────────────
        UTILITIES
        ────────────────────────────────────────── */
-    function showFeedback(type, html) {
-        showFeedbackFor('config-feedback', type, html);
-    }
+      function showFeedback(type, html) {
+        showFeedbackFor("config-feedback", type, html);
+      }
 
-    function showFeedbackFor(elId, type, html) {
+      function showFeedbackFor(elId, type, html) {
         const el = document.getElementById(elId);
         if (!el) return;
-        el.className = 'feedback feedback-' + type;
+        el.className = "feedback feedback-" + type;
         el.innerHTML = html;
-        el.style.display = 'block';
-        setTimeout(() => { el.style.display = 'none'; }, 6000);
-    }
+        el.style.display = "block";
+        setTimeout(() => {
+          el.style.display = "none";
+        }, 6000);
+      }
 
-    function escHtml(str) {
+      function escHtml(str) {
         return str
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
 
-    // Enter để submit trong form input
-    document.getElementById('input-job-id')?.addEventListener('keydown', e => {
-        if (e.key === 'Enter') submitJobId();
-    });
-    document.getElementById('input-kaggle-var')?.addEventListener('keydown', e => {
-        if (e.key === 'Enter' && !document.getElementById('btn-submit-var').disabled) submitKaggleVar();
-    });
+      // Enter để submit trong form input
+      document
+        .getElementById("input-job-id")
+        ?.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") submitJobId();
+        });
+      document
+        .getElementById("input-kaggle-var")
+        ?.addEventListener("keydown", (e) => {
+          if (
+            e.key === "Enter" &&
+            !document.getElementById("btn-submit-var").disabled
+          )
+            submitKaggleVar();
+        });
 
-    /* ──────────────────────────────────────────
+      /* ──────────────────────────────────────────
        SECTION 4 — JSON VIEWER
        ────────────────────────────────────────── */
-    async function loadJsonViewer() {
-        const elContent = document.getElementById('json-viewer-content');
-        const elLoading = document.getElementById('json-viewer-loading');
-        const elSize    = document.getElementById('json-viewer-size');
-        const elUpdated = document.getElementById('json-viewer-updated');
-        const elStats   = document.getElementById('json-stats-row');
+      async function loadJsonViewer() {
+        const elContent = document.getElementById("json-viewer-content");
+        const elLoading = document.getElementById("json-viewer-loading");
+        const elSize = document.getElementById("json-viewer-size");
+        const elUpdated = document.getElementById("json-viewer-updated");
+        const elStats = document.getElementById("json-stats-row");
 
-        elLoading.style.display = 'flex';
-        elContent.style.opacity = '0.3';
+        elLoading.style.display = "flex";
+        elContent.style.opacity = "0.3";
 
         try {
-            const res  = await fetch('/admin/api/config/file');
-            const text = await res.text();
-            let jsonObj;
+          const res = await fetch("/admin/api/config/file");
+          const text = await res.text();
+          let jsonObj;
 
-            try {
-                jsonObj = JSON.parse(text);
-            } catch {
-                elContent.textContent = text;
-                return;
-            }
+          try {
+            jsonObj = JSON.parse(text);
+          } catch {
+            elContent.textContent = text;
+            return;
+          }
 
-            // Syntax highlight
-            elContent.innerHTML = syntaxHighlightJson(JSON.stringify(jsonObj, null, 2));
+          // Syntax highlight
+          elContent.innerHTML = syntaxHighlightJson(
+            JSON.stringify(jsonObj, null, 2),
+          );
 
-            // Meta
-            const bytes = new Blob([text]).size;
-            elSize.textContent = bytes < 1024
-                ? bytes + ' bytes'
-                : (bytes / 1024).toFixed(1) + ' KB';
-            elUpdated.textContent = 'Cập nhật: ' + new Date().toLocaleTimeString('vi-VN');
+          // Meta
+          const bytes = new Blob([text]).size;
+          elSize.textContent =
+            bytes < 1024 ? bytes + " bytes" : (bytes / 1024).toFixed(1) + " KB";
+          elUpdated.textContent =
+            "Cập nhật: " + new Date().toLocaleTimeString("vi-VN");
 
-            // Stats
-            computeJsonStats(jsonObj);
-            elStats.style.display = 'flex';
+          // Stats
+          computeJsonStats(jsonObj);
+          elStats.style.display = "flex";
         } catch (err) {
-            elContent.textContent = '❌ Không thể tải cấu hình:\n' + err.message;
+          elContent.textContent = "❌ Không thể tải cấu hình:\n" + err.message;
         } finally {
-            elLoading.style.display = 'none';
-            elContent.style.opacity = '1';
+          elLoading.style.display = "none";
+          elContent.style.opacity = "1";
         }
-    }
+      }
 
-    function computeJsonStats(obj) {
+      function computeJsonStats(obj) {
         const kaggle = obj.kaggle || {};
         const users = Object.keys(kaggle);
-        let notebooks = 0, vars = 0;
-        users.forEach(u => {
-            const nbs = Object.keys(kaggle[u] || {});
-            notebooks += nbs.length;
-            nbs.forEach(nb => { vars += Object.keys(kaggle[u][nb] || {}).length; });
+        let notebooks = 0,
+          vars = 0;
+        users.forEach((u) => {
+          const nbs = Object.keys(kaggle[u] || {});
+          notebooks += nbs.length;
+          nbs.forEach((nb) => {
+            vars += Object.keys(kaggle[u][nb] || {}).length;
+          });
         });
-        document.getElementById('stat-users').textContent     = users.length;
-        document.getElementById('stat-notebooks').textContent = notebooks;
-        document.getElementById('stat-vars').textContent      = vars;
-        document.getElementById('stat-job-id').textContent    = obj.active_job_id || '— Không giới hạn —';
-    }
+        document.getElementById("stat-users").textContent = users.length;
+        document.getElementById("stat-notebooks").textContent = notebooks;
+        document.getElementById("stat-vars").textContent = vars;
+        document.getElementById("stat-job-id").textContent =
+          obj.active_job_id || "— Không giới hạn —";
+      }
 
-    function syntaxHighlightJson(json) {
+      function syntaxHighlightJson(json) {
         // Escape HTML first
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        json = json
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
         return json.replace(
-            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-            function(match) {
-                let cls = 'json-num';  // number
-                if (/^"/.test(match)) {
-                    cls = /:$/.test(match) ? 'json-key' : 'json-str';
-                } else if (/true|false/.test(match)) {
-                    cls = 'json-bool';
-                } else if (/null/.test(match)) {
-                    cls = 'json-null';
-                }
-                return '<span class="' + cls + '">' + match + '</span>';
+          /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+          function (match) {
+            let cls = "json-num"; // number
+            if (/^"/.test(match)) {
+              cls = /:$/.test(match) ? "json-key" : "json-str";
+            } else if (/true|false/.test(match)) {
+              cls = "json-bool";
+            } else if (/null/.test(match)) {
+              cls = "json-null";
             }
+            return '<span class="' + cls + '">' + match + "</span>";
+          },
         );
-    }
+      }
 
-    async function copyJsonViewer() {
-        const content = document.getElementById('json-viewer-content').textContent;
-        const btn     = document.getElementById('btn-copy-json-viewer');
+      async function copyJsonViewer() {
+        const content = document.getElementById(
+          "json-viewer-content",
+        ).textContent;
+        const btn = document.getElementById("btn-copy-json-viewer");
         try {
-            await navigator.clipboard.writeText(content);
-            btn.textContent = '✅ Đã sao chép!';
-            btn.classList.add('btn-success');
+          await navigator.clipboard.writeText(content);
+          btn.textContent = "✅ Đã sao chép!";
+          btn.classList.add("btn-success");
         } catch {
-            btn.textContent = '❌ Lỗi!';
+          btn.textContent = "❌ Lỗi!";
         } finally {
-            setTimeout(() => {
-                btn.textContent = '📋 Sao chép';
-                btn.classList.remove('btn-success');
-            }, 2200);
+          setTimeout(() => {
+            btn.textContent = "📋 Sao chép";
+            btn.classList.remove("btn-success");
+          }, 2200);
         }
-    }
-</script>
-</body>
+      }
+    </script>
+  </body>
 </html>
