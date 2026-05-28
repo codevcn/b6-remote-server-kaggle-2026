@@ -65,6 +65,15 @@
                     <span class="nav-card-arrow">→</span>
                 </button>
 
+                <button class="nav-card" id="btn-nav-json-viewer" onclick="showSection('json-viewer')">
+                    <span class="nav-card-icon">📄</span>
+                    <div class="nav-card-body">
+                        <h3 class="nav-card-title">Xem configs.json</h3>
+                        <p class="nav-card-desc">Xem toàn bộ nội dung tệp cấu hình hệ thống với định dạng đẹp</p>
+                    </div>
+                    <span class="nav-card-arrow">→</span>
+                </button>
+
             </div>
         </section>
 
@@ -220,6 +229,56 @@
             </div>
         </section>
 
+        <!-- ── Section 4: JSON Viewer ── -->
+        <section id="section-json-viewer" class="section">
+            <div class="section-header">
+                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
+                <h2 class="section-title">📄 Xem nội dung configs.json</h2>
+                <div class="section-actions">
+                    <button class="btn btn-secondary" onclick="loadJsonViewer()">🔄 Làm mới</button>
+                    <button class="btn btn-secondary" id="btn-copy-json-viewer" onclick="copyJsonViewer()">📋 Sao chép</button>
+                </div>
+            </div>
+
+            <!-- Meta info -->
+            <div class="json-viewer-meta" id="json-viewer-meta">
+                <span class="json-meta-tag">📁 src/configs/configs.json</span>
+                <span class="json-meta-sep">·</span>
+                <span id="json-viewer-size">—</span>
+                <span class="json-meta-sep">·</span>
+                <span id="json-viewer-updated">Chưa tải</span>
+            </div>
+
+            <!-- Viewer card -->
+            <div class="config-card json-viewer-card">
+                <div id="json-viewer-loading" class="loading-state" style="display:none">
+                    <div class="spinner"></div>
+                    <span>Đang tải cấu hình...</span>
+                </div>
+                <pre id="json-viewer-content" class="json-highlighted">Đang tải cấu hình...</pre>
+            </div>
+
+            <!-- Key Stats -->
+            <div id="json-stats-row" class="json-stats-row" style="display:none">
+                <div class="json-stat-card">
+                    <span class="json-stat-label">Kaggle Users</span>
+                    <span class="json-stat-value" id="stat-users">—</span>
+                </div>
+                <div class="json-stat-card">
+                    <span class="json-stat-label">Notebooks cấu hình</span>
+                    <span class="json-stat-value" id="stat-notebooks">—</span>
+                </div>
+                <div class="json-stat-card">
+                    <span class="json-stat-label">Tổng biến số</span>
+                    <span class="json-stat-value" id="stat-vars">—</span>
+                </div>
+                <div class="json-stat-card">
+                    <span class="json-stat-label">Active Job ID</span>
+                    <span class="json-stat-value" id="stat-job-id">—</span>
+                </div>
+            </div>
+        </section>
+
     </main>
 </div>
 
@@ -231,9 +290,10 @@
     function showSection(name) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById('section-' + name).classList.add('active');
-        if (name === 'logs')   loadLogs();
-        if (name === 'config') loadConfig();
+        if (name === 'logs')        loadLogs();
+        if (name === 'config')      loadConfig();
         if (name === 'kaggle-vars') loadKaggleVars();
+        if (name === 'json-viewer') loadJsonViewer();
     }
 
     /* ──────────────────────────────────────────
@@ -575,6 +635,103 @@
     document.getElementById('input-kaggle-var')?.addEventListener('keydown', e => {
         if (e.key === 'Enter' && !document.getElementById('btn-submit-var').disabled) submitKaggleVar();
     });
+
+    /* ──────────────────────────────────────────
+       SECTION 4 — JSON VIEWER
+       ────────────────────────────────────────── */
+    async function loadJsonViewer() {
+        const elContent = document.getElementById('json-viewer-content');
+        const elLoading = document.getElementById('json-viewer-loading');
+        const elSize    = document.getElementById('json-viewer-size');
+        const elUpdated = document.getElementById('json-viewer-updated');
+        const elStats   = document.getElementById('json-stats-row');
+
+        elLoading.style.display = 'flex';
+        elContent.style.opacity = '0.3';
+
+        try {
+            const res  = await fetch('/admin/api/config/file');
+            const text = await res.text();
+            let jsonObj;
+
+            try {
+                jsonObj = JSON.parse(text);
+            } catch {
+                elContent.textContent = text;
+                return;
+            }
+
+            // Syntax highlight
+            elContent.innerHTML = syntaxHighlightJson(JSON.stringify(jsonObj, null, 2));
+
+            // Meta
+            const bytes = new Blob([text]).size;
+            elSize.textContent = bytes < 1024
+                ? bytes + ' bytes'
+                : (bytes / 1024).toFixed(1) + ' KB';
+            elUpdated.textContent = 'Cập nhật: ' + new Date().toLocaleTimeString('vi-VN');
+
+            // Stats
+            computeJsonStats(jsonObj);
+            elStats.style.display = 'flex';
+        } catch (err) {
+            elContent.textContent = '❌ Không thể tải cấu hình:\n' + err.message;
+        } finally {
+            elLoading.style.display = 'none';
+            elContent.style.opacity = '1';
+        }
+    }
+
+    function computeJsonStats(obj) {
+        const kaggle = obj.kaggle || {};
+        const users = Object.keys(kaggle);
+        let notebooks = 0, vars = 0;
+        users.forEach(u => {
+            const nbs = Object.keys(kaggle[u] || {});
+            notebooks += nbs.length;
+            nbs.forEach(nb => { vars += Object.keys(kaggle[u][nb] || {}).length; });
+        });
+        document.getElementById('stat-users').textContent     = users.length;
+        document.getElementById('stat-notebooks').textContent = notebooks;
+        document.getElementById('stat-vars').textContent      = vars;
+        document.getElementById('stat-job-id').textContent    = obj.active_job_id || '— Không giới hạn —';
+    }
+
+    function syntaxHighlightJson(json) {
+        // Escape HTML first
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(
+            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function(match) {
+                let cls = 'json-num';  // number
+                if (/^"/.test(match)) {
+                    cls = /:$/.test(match) ? 'json-key' : 'json-str';
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-bool';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            }
+        );
+    }
+
+    async function copyJsonViewer() {
+        const content = document.getElementById('json-viewer-content').textContent;
+        const btn     = document.getElementById('btn-copy-json-viewer');
+        try {
+            await navigator.clipboard.writeText(content);
+            btn.textContent = '✅ Đã sao chép!';
+            btn.classList.add('btn-success');
+        } catch {
+            btn.textContent = '❌ Lỗi!';
+        } finally {
+            setTimeout(() => {
+                btn.textContent = '📋 Sao chép';
+                btn.classList.remove('btn-success');
+            }, 2200);
+        }
+    }
 </script>
 </body>
 </html>
