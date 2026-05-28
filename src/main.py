@@ -372,6 +372,8 @@ async def receive_notebook_webhook(
         f"Loại      : <b>{payload.notebook_index_type.upper()}</b>\n"
         f"Trạng thái: <b>{payload.status.upper()}</b>"
     )
+    if payload.text_data:
+        notify_message += f"\nDữ liệu đính kèm từ notebook: {payload.text_data}"
     background_tasks.add_task(TelegramService.send_message, notify_message)
 
     if payload.job_id not in jobs_state:
