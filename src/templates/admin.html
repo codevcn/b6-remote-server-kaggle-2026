@@ -56,6 +56,15 @@
                     <span class="nav-card-arrow">→</span>
                 </button>
 
+                <button class="nav-card" id="btn-nav-kaggle-vars" onclick="showSection('kaggle-vars')">
+                    <span class="nav-card-icon">🔑</span>
+                    <div class="nav-card-body">
+                        <h3 class="nav-card-title">Cấu hình Biến Kaggle</h3>
+                        <p class="nav-card-desc">Quản lý giá trị biến số của Kaggle Notebook trước khi chạy</p>
+                    </div>
+                    <span class="nav-card-arrow">→</span>
+                </button>
+
             </div>
         </section>
 
@@ -134,6 +143,69 @@
 
         </section>
 
+        <!-- ── Section 3: Kaggle Variables ── -->
+        <section id="section-kaggle-vars" class="section">
+            <div class="section-header">
+                <button class="btn btn-ghost" onclick="showSection('switcher')">← Quay lại</button>
+                <h2 class="section-title">🔑 Cấu hình Biến Kaggle</h2>
+            </div>
+
+            <!-- Card: Danh sách biến hiện tại -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <span class="config-label">Danh sách biến đang cấu hình</span>
+                    <button class="btn btn-sm btn-ghost" onclick="loadKaggleVars()" title="Làm mới">🔄</button>
+                </div>
+                <div class="table-container">
+                    <table class="vars-table" id="kaggle-vars-table">
+                        <thead>
+                            <tr>
+                                <th>Kaggle Username</th>
+                                <th>Notebook Slug</th>
+                                <th>Tên biến</th>
+                                <th>Giá trị mới</th>
+                                <th style="text-align: right;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="kaggle-vars-tbody">
+                            <tr>
+                                <td colspan="5" class="table-empty">Đang tải cấu hình biến...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Card: Thêm mới hoặc cập nhật biến -->
+            <div class="config-card">
+                <div class="config-card-header">
+                    <span class="config-label">Thêm mới / Cập nhật biến số</span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="input-kaggle-var">Biến Kaggle Notebook cần đổi giá trị</label>
+                    <input
+                        type="text"
+                        id="input-kaggle-var"
+                        class="form-input"
+                        placeholder="username/notebook-slug/var_name/new_value"
+                        autocomplete="off"
+                        spellcheck="false"
+                        oninput="validateKaggleVarInput()"
+                    />
+                    <p class="form-hint">
+                        Nhập theo định dạng: <code>{kaggle username}/{notebook slug}/{var}/{new value}</code>
+                        <br>Ví dụ: <code>hipbiquang/omnivoice-speech-flow/MAX_GAP_BETWEEN_BLOCKS_IN_MS/695</code>
+                    </p>
+                    <!-- Live validation message -->
+                    <div id="var-validation-msg" class="validation-msg" style="display:none"></div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="btn-submit-var" onclick="submitKaggleVar()" disabled>✅ Lưu cấu hình biến</button>
+                </div>
+                <div id="kaggle-var-feedback" class="feedback" style="display:none"></div>
+            </div>
+        </section>
+
     </main>
 </div>
 
@@ -147,6 +219,7 @@
         document.getElementById('section-' + name).classList.add('active');
         if (name === 'logs')   loadLogs();
         if (name === 'config') loadConfig();
+        if (name === 'kaggle-vars') loadKaggleVars();
     }
 
     /* ──────────────────────────────────────────
@@ -271,14 +344,169 @@
     }
 
     /* ──────────────────────────────────────────
+       SECTION 3 — KAGGLE VARIABLES
+       ────────────────────────────────────────── */
+    async function loadKaggleVars() {
+        const tbody = document.getElementById('kaggle-vars-tbody');
+        tbody.innerHTML = '<tr><td colspan="5" class="table-empty"><div class="spinner" style="display:inline-block"></div> Đang tải danh sách...</td></tr>';
+        
+        try {
+            const res = await fetch('/admin/api/config/kaggle-vars');
+            const data = await res.json();
+            
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="table-empty">⚡ Chưa có biến nào được cấu hình.</td></tr>';
+                return;
+            }
+            
+            let html = '';
+            data.forEach(item => {
+                html += `
+                    <tr>
+                        <td><span class="user-badge">${escHtml(item.username)}</span></td>
+                        <td><span class="slug-badge">${escHtml(item.notebook_slug)}</span></td>
+                        <td><code class="var-code">${escHtml(item.variable)}</code></td>
+                        <td><code class="val-code">${escHtml(String(item.value))}</code></td>
+                        <td style="text-align: right;">
+                            <button class="btn btn-sm btn-danger" onclick="deleteKaggleVar('${escHtml(item.username)}', '${escHtml(item.notebook_slug)}', '${escHtml(item.variable)}')">🗑️ Xóa</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="5" class="table-empty" style="color:var(--danger)">❌ Lỗi: ${escHtml(err.message)}</td></tr>`;
+        }
+    }
+
+    function validateKaggleVarInput() {
+        const inputVal = document.getElementById('input-kaggle-var').value.trim();
+        const msgEl = document.getElementById('var-validation-msg');
+        const submitBtn = document.getElementById('btn-submit-var');
+        
+        if (!inputVal) {
+            msgEl.style.display = 'none';
+            submitBtn.disabled = true;
+            return;
+        }
+        
+        const parts = inputVal.split('/');
+        if (parts.length < 4) {
+            showValidation('error', '⚠️ Định dạng phải có ít nhất 3 dấu gạch chéo: username/slug/variable/new_value');
+            submitBtn.disabled = true;
+            return;
+        }
+        
+        const username = parts[0].trim();
+        const slug = parts[1].trim();
+        const variable = parts[2].trim();
+        const value = parts.slice(3).join('/').trim();
+        
+        if (!username) {
+            showValidation('error', '⚠️ Thiếu Kaggle Username ở phần đầu tiên.');
+            submitBtn.disabled = true;
+            return;
+        }
+        if (!slug) {
+            showValidation('error', '⚠️ Thiếu Notebook Slug ở phần thứ hai.');
+            submitBtn.disabled = true;
+            return;
+        }
+        if (!variable) {
+            showValidation('error', '⚠️ Thiếu tên biến (Variable) ở phần thứ ba.');
+            submitBtn.disabled = true;
+            return;
+        }
+        if (!value) {
+            showValidation('error', '⚠️ Thiếu giá trị mới (New value) ở phần thứ tư.');
+            submitBtn.disabled = true;
+            return;
+        }
+        
+        // Validate tên biến python
+        const pythonVarRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
+        if (!pythonVarRegex.test(variable)) {
+            showValidation('error', `⚠️ Tên biến '${variable}' không hợp lệ trong Python. Bắt đầu bằng chữ/gạch dưới, chỉ chứa chữ, số, gạch dưới.`);
+            submitBtn.disabled = true;
+            return;
+        }
+        
+        // Định dạng đúng!
+        showValidation('success', `👉 Định dạng hợp lệ! Biến <code>${escHtml(variable)}</code> của notebook <code>${escHtml(username)}/${escHtml(slug)}</code> sẽ có giá trị mới.`);
+        submitBtn.disabled = false;
+    }
+
+    function showValidation(type, html) {
+        const msgEl = document.getElementById('var-validation-msg');
+        msgEl.className = 'validation-msg validation-' + type;
+        msgEl.innerHTML = html;
+        msgEl.style.display = 'block';
+    }
+
+    async function submitKaggleVar() {
+        const inputVal = document.getElementById('input-kaggle-var').value.trim();
+        const submitBtn = document.getElementById('btn-submit-var');
+        submitBtn.disabled = true;
+        
+        try {
+            const res = await fetch('/admin/api/config/kaggle-vars', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ raw_value: inputVal })
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+                showFeedbackFor('kaggle-var-feedback', 'success', '✅ Đã lưu cấu hình biến thành công!');
+                document.getElementById('input-kaggle-var').value = '';
+                document.getElementById('var-validation-msg').style.display = 'none';
+                await loadKaggleVars();
+            } else {
+                showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi: ' + (data.detail || 'Không thể lưu cấu hình.'));
+            }
+        } catch (err) {
+            showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi kết nối: ' + err.message);
+        } finally {
+            submitBtn.disabled = false;
+        }
+    }
+
+    async function deleteKaggleVar(username, slug, variable) {
+        if (!confirm(`Xác nhận xóa cấu hình biến '${variable}' của notebook '${slug}'?`)) return;
+        
+        try {
+            const res = await fetch('/admin/api/config/kaggle-vars', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, notebook_slug: slug, variable })
+            });
+            const data = await res.json();
+            
+            if (res.ok) {
+                showFeedbackFor('kaggle-var-feedback', 'success', `✅ Đã xóa cấu hình biến '${variable}' thành công.`);
+                await loadKaggleVars();
+            } else {
+                showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi: ' + (data.detail || 'Không thể xóa.'));
+            }
+        } catch (err) {
+            showFeedbackFor('kaggle-var-feedback', 'error', '❌ Lỗi kết nối: ' + err.message);
+        }
+    }
+
+    /* ──────────────────────────────────────────
        UTILITIES
        ────────────────────────────────────────── */
     function showFeedback(type, html) {
-        const el = document.getElementById('config-feedback');
+        showFeedbackFor('config-feedback', type, html);
+    }
+
+    function showFeedbackFor(elId, type, html) {
+        const el = document.getElementById(elId);
+        if (!el) return;
         el.className = 'feedback feedback-' + type;
         el.innerHTML = html;
         el.style.display = 'block';
-        setTimeout(() => { el.style.display = 'none'; }, 5000);
+        setTimeout(() => { el.style.display = 'none'; }, 6000);
     }
 
     function escHtml(str) {
@@ -292,6 +520,9 @@
     // Enter để submit trong form input
     document.getElementById('input-job-id')?.addEventListener('keydown', e => {
         if (e.key === 'Enter') submitJobId();
+    });
+    document.getElementById('input-kaggle-var')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !document.getElementById('btn-submit-var').disabled) submitKaggleVar();
     });
 </script>
 </body>

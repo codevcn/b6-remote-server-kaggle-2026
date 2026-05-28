@@ -1,4 +1,10 @@
 {
-  "active_job_id": null
+  "active_job_id": null,
+  "kaggle": {
+    "hipbiquang": {
+      "omnivoice-speech-flow": {
+        "MAX_GAP_BETWEEN_BLOCKS_IN_MS": 695
+      }
+    }
+  }
 }
-
